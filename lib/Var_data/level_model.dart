@@ -1,7 +1,7 @@
-import 'package:ex_app/data/advanced_exercises.dart';
-import 'package:ex_app/data/beginner_exercises.dart';
-import 'package:ex_app/data/intermediate_exercises.dart';
-import 'package:ex_app/data/low_impact_cardio_workout.dart';
+import 'package:ex_app/Var_data/advanced_exercises.dart';
+import 'package:ex_app/Var_data/beginner_exercises.dart';
+import 'package:ex_app/Var_data/intermediate_exercises.dart';
+import 'package:ex_app/Var_data/low_impact_cardio_workout.dart';
 
 class Levels {
   final int id;

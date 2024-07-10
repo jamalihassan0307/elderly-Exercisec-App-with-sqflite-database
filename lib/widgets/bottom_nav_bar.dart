@@ -1,10 +1,10 @@
-import 'package:ex_app/Core/color.dart';
-import 'package:ex_app/Core/route.dart';
-import 'package:ex_app/Core/size/size_config.dart';
-import 'package:ex_app/data/nav_button_data.dart';
-import 'package:ex_app/pages/home/home_page.dart';
-import 'package:ex_app/pages/profile/profile_page.dart';
-import 'package:ex_app/pages/report/report_page.dart';
+import 'package:ex_app/const/color.dart';
+import 'package:ex_app/const/route.dart';
+import 'package:ex_app/const/size/size_config.dart';
+import 'package:ex_app/Var_data/nav_button_data.dart';
+import 'package:ex_app/Screens/home/home_page.dart';
+import 'package:ex_app/Screens/profile/profile_page.dart';
+import 'package:ex_app/Screens/report/report_page.dart';
 import 'package:ex_app/widgets/picker.dart';
 import 'package:flutter/material.dart';
 

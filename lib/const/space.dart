@@ -1,4 +1,4 @@
-import 'package:ex_app/Core/size/size_config.dart';
+import 'package:ex_app/const/size/size_config.dart';
 import 'package:flutter/cupertino.dart';
 
 const SizedBox h5 = SizedBox(height: 5.0);

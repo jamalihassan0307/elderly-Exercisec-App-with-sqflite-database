@@ -1,5 +1,5 @@
 import 'package:android_alarm_manager_plus/android_alarm_manager_plus.dart';
-import 'package:ex_app/data/database/app_db.dart';
+import 'package:ex_app/Var_data/database/app_db.dart';
 import 'package:ex_app/exercise_app.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';

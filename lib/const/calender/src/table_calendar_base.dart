@@ -1,4 +1,4 @@
-import 'package:ex_app/Core/calender/src/simple_g.dart';
+import 'package:ex_app/const/calender/src/simple_g.dart';
 import 'package:flutter/material.dart';
 
 import 'shared/utils.dart';

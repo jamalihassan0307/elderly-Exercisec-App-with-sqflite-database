@@ -1,7 +1,7 @@
-import 'package:ex_app/Core/route.dart';
-import 'package:ex_app/Core/size/size_config.dart';
-import 'package:ex_app/pages/report/history_calender.dart';
-import 'package:ex_app/Core/color.dart';
+import 'package:ex_app/const/route.dart';
+import 'package:ex_app/const/size/size_config.dart';
+import 'package:ex_app/Screens/report/history_calender.dart';
+import 'package:ex_app/const/color.dart';
 import 'package:ex_app/widgets/custom_circle_button.dart';
 import 'package:ex_app/widgets/picker.dart';
 import 'package:flutter/material.dart';

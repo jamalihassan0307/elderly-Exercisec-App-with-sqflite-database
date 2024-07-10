@@ -1,4 +1,4 @@
-import 'package:ex_app/data/exercise_model.dart';
+import 'package:ex_app/Var_data/exercise_model.dart';
 
 List<Exercise> advancedExercises = [
   Exercise(

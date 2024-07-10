@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:ex_app/Core/color.dart';
-import 'package:ex_app/Core/route.dart';
-import 'package:ex_app/Core/size/size_config.dart';
-import 'package:ex_app/pages/splash_page.dart';
+import 'package:ex_app/const/color.dart';
+import 'package:ex_app/const/route.dart';
+import 'package:ex_app/const/size/size_config.dart';
+import 'package:ex_app/Screens/splash_page.dart';
 
 class ExerciseApp extends StatelessWidget {
   const ExerciseApp({Key? key}) : super(key: key);

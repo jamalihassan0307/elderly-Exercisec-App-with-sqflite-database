@@ -1,8 +1,8 @@
-import 'package:ex_app/Core/color.dart';
-import 'package:ex_app/Core/size/size_config.dart';
-import 'package:ex_app/Core/space.dart';
-import 'package:ex_app/data/database/app_db.dart';
-import 'package:ex_app/data/model/alarm.dart';
+import 'package:ex_app/const/color.dart';
+import 'package:ex_app/const/size/size_config.dart';
+import 'package:ex_app/const/space.dart';
+import 'package:ex_app/Var_data/database/app_db.dart';
+import 'package:ex_app/Var_data/model/alarm.dart';
 import 'package:ex_app/widgets/dialog_box_button.dart';
 import 'package:flutter/material.dart';
 

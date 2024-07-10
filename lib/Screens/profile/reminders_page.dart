@@ -1,11 +1,11 @@
 import 'package:android_alarm_manager_plus/android_alarm_manager_plus.dart';
-import 'package:ex_app/Core/color.dart';
-import 'package:ex_app/Core/size/size_config.dart';
-import 'package:ex_app/Core/space.dart';
-import 'package:ex_app/data/database/app_db.dart';
-import 'package:ex_app/data/model/alarm.dart';
+import 'package:ex_app/const/color.dart';
+import 'package:ex_app/const/size/size_config.dart';
+import 'package:ex_app/const/space.dart';
+import 'package:ex_app/Var_data/database/app_db.dart';
+import 'package:ex_app/Var_data/model/alarm.dart';
 import 'package:ex_app/main.dart';
-import 'package:ex_app/pages/profile/widgets/weekdays_picker.dart';
+import 'package:ex_app/Screens/profile/widgets/weekdays_picker.dart';
 import 'package:ex_app/widgets/custom_circle_button.dart';
 import 'package:ex_app/widgets/picker.dart';
 import 'package:flutter/cupertino.dart';

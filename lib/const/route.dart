@@ -1,14 +1,14 @@
-import 'package:ex_app/data/exercise_model.dart';
-import 'package:ex_app/data/level_model.dart';
-import 'package:ex_app/data/model/event.dart';
-import 'package:ex_app/pages/home/complete_page.dart';
-import 'package:ex_app/pages/home/exercise_details_page.dart';
-import 'package:ex_app/pages/home/home_page.dart';
-import 'package:ex_app/pages/home/ready_page.dart';
-import 'package:ex_app/pages/home/view_all_exercise.dart';
-import 'package:ex_app/pages/profile/reminders_page.dart';
-import 'package:ex_app/pages/report/history_page.dart';
-import 'package:ex_app/pages/report/report_page.dart';
+import 'package:ex_app/Var_data/exercise_model.dart';
+import 'package:ex_app/Var_data/level_model.dart';
+import 'package:ex_app/Var_data/model/event.dart';
+import 'package:ex_app/Screens/home/complete_page.dart';
+import 'package:ex_app/Screens/home/exercise_details_page.dart';
+import 'package:ex_app/Screens/home/home_page.dart';
+import 'package:ex_app/Screens/home/ready_page.dart';
+import 'package:ex_app/Screens/home/view_all_exercise.dart';
+import 'package:ex_app/Screens/profile/reminders_page.dart';
+import 'package:ex_app/Screens/report/history_page.dart';
+import 'package:ex_app/Screens/report/report_page.dart';
 import 'package:ex_app/widgets/bottom_nav_bar.dart';
 import 'package:flutter/material.dart';
 

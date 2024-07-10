@@ -1,9 +1,9 @@
-import 'package:ex_app/Core/color.dart';
-import 'package:ex_app/Core/size/size_config.dart';
-import 'package:ex_app/Core/space.dart';
-import 'package:ex_app/data/level_model.dart';
-import 'package:ex_app/pages/home/widgets/main_tile.dart';
-import 'package:ex_app/pages/home/widgets/second_tile.dart';
+import 'package:ex_app/const/color.dart';
+import 'package:ex_app/const/size/size_config.dart';
+import 'package:ex_app/const/space.dart';
+import 'package:ex_app/Var_data/level_model.dart';
+import 'package:ex_app/Screens/home/widgets/main_tile.dart';
+import 'package:ex_app/Screens/home/widgets/second_tile.dart';
 import 'package:flutter/material.dart';
 
 class HomePage extends StatefulWidget {
