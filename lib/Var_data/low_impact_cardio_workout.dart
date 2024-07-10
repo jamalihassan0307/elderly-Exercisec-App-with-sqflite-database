@@ -1,0 +1,146 @@
+import 'package:ex_app/data/exercise_model.dart';
+
+List<Exercise> lowImpactCardioWorkout = [
+  Exercise(
+    id: 0,
+    name: 'Shoulder Stretch',
+    imagePath: 'assets/gif/Licw/Shoulder_Stretch.gif',
+    time: '60',
+    duration: const Duration(seconds: 60),
+    steps: [
+      'Sit with spine straight, feet planted firmly on the ground. Clasp hands behind your back.',
+      'Gently straighten your arms. Push the chest outward, and raise the chin.',
+      'After 3 deep breaths, release your clasp and return to neutral. Repeat.',
+    ],
+  ),
+  Exercise(
+    id: 1,
+    name: 'Neck and Chest Stretch',
+    imagePath: 'assets/gif/Licw/Neck_and_Chest_Stretch.gif',
+    time: '60',
+    duration: const Duration(seconds: 60),
+    steps: [
+      'Sitting up straight, feet flat on the floor. Put your hands behind your head and cross your fingers.',
+      'Turn your face to the ceiling. The left elbow points to the ground and the right elbow points to the ceiling.',
+      'Return to neutral, with the spine upright. Repeat on the other side. ',
+    ],
+  ),
+  Exercise(
+    id: 2,
+    name: 'Seated Cat Cow',
+    duration: const Duration(seconds: 60),
+    imagePath: 'assets/gif/Licw/Seated_Cat_Cow.gif',
+    time: '60',
+    steps: [
+      'Seat with feet planted firmly on the floor, place your hands on your knees, fingers pointing in toward each other.',
+      'Press into your hands and arch your back. Your face will be toward the sky. ',
+      'Roll your shoulders forward and pull your bellybutton toward your spine, dropping your chin toward your chest. Then Repeat.',
+    ],
+  ),
+  Exercise(
+    id: 3,
+    name: 'Shoulder Circles',
+    duration: const Duration(seconds: 60),
+    imagePath: 'assets/gif/Licw/Shoulder_Circles.gif',
+    time: '60',
+    steps: [
+      'Sitting up straight and your arms hanging by your sides.  Both hands put on your shoulder.',
+      'Move your shoulders in a circle, bringing them backward, upward, forward, and then downward.',
+      'After 10 reps, reverse the direction.',
+    ],
+  ),
+  Exercise(
+    id: 4,
+    name: 'Shoulder Swing Stretch',
+    duration: const Duration(seconds: 60),
+    imagePath: 'assets/gif/Licw/Shoulder_Swing_Stretch.gif',
+    time: '60',
+    steps: [
+      'Stand with shoulder-width apart. Bring left arm up to just below your shoulder.',
+      'Place right hand on left elbow. Slowly pull left arm across your body.',
+      'Use right hand to gently hold the position for 10 seconds. Repeat on the other side.',
+    ],
+  ),
+  Exercise(
+    id: 5,
+    name: 'Trunk Rotation',
+    duration: const Duration(seconds: 60),
+    imagePath: 'assets/gif/Licw/Trunk_Rotation.gif',
+    time: '60',
+    steps: [
+      'Stand with a heavy object at chest height with elbows to the sides.',
+      'Twist from the torso, turning to one side, then the other.',
+    ],
+  ),
+  Exercise(
+    id: 6,
+    name: 'Standing Heel Lifts',
+    duration: const Duration(seconds: 60),
+    imagePath: 'assets/gif/Licw/Standing_Heel_Lifts.gif',
+    time: '60',
+    steps: [
+      'Stand with your feet about shoulder-width apart. Lift your heels off the floor.',
+      'Slowly lower your heels to the floor. Then Repeat.',
+    ],
+  ),
+  Exercise(
+    id: 7,
+    name: 'Hip Abduction',
+    duration: const Duration(seconds: 60),
+    imagePath: 'assets/gif/Licw/Hip_Abduction.gif',
+    time: '60',
+    steps: [
+      'Stand upright. Put your hands together. Starting with the feet together.',
+      'Lift the right leg out to the right side. Keep the left leg straight and avoid rotating the hips. ',
+      'Hold the position for 5 seconds and then slowly return the leg to the starting position. Then repeat it on the other side.',
+    ],
+  ),
+  Exercise(
+    id: 8,
+    name: 'Quadriceps Stretch',
+    duration: const Duration(seconds: 60),
+    imagePath: 'assets/gif/Licw/Standing_Quadriceps_Stretch.gif',
+    time: '60',
+    steps: [
+      'From a standing position, bend your right knee to bring your heel toward your buttock. Hold your ankle with one hand.',
+      'Keep your knees in alignment next to each other, and don’t pull your knee out to the side.',
+      'Hold this position for 10 seconds. Repeat on the opposite side.',
+    ],
+  ),
+  Exercise(
+    id: 9,
+    name: 'Speed Skaters',
+    duration: const Duration(seconds: 60),
+    imagePath: 'assets/gif/Licw/Speed_Skaters.gif',
+    time: '60',
+    steps: [
+      'Start in a curtsy lunge, both knees bent and your right leg diagonally behind you. Bend your right arm and straighten your left arm.',
+      'Push off your left leg, moving your right leg forward. Bring your left leg diagonally behind you and switch arms.',
+      'Continue skating left and right.',
+    ],
+  ),
+  Exercise(
+    id: 10,
+    name: 'Knee Driver',
+    duration: const Duration(seconds: 60),
+    imagePath: 'assets/gif/Licw/Knee_Driver.gif',
+    time: '60',
+    steps: [
+      'Begin with your weight on your left foot and your hands together in front of you for balance.',
+      'Bend your left knee and extend your right leg behind you. Drive your right knee toward your chest, bringing your hands to meet your knee.',
+      'Re-extend your right leg behind you. Continue for 30 seconds on this side, then switch sides.',
+    ],
+  ),
+  Exercise(
+    id: 11,
+    name: 'Screamer Lunges',
+    duration: const Duration(seconds: 60),
+    imagePath: 'assets/gif/Licw/Screamer_Lunges.gif',
+    time: '60',
+    steps: [
+      'Stand with the feet hip-width apart. Extend the right leg back to a lunge position.',
+      'Push off with the right foot to lift the right knee to hip height, jumping in the air while doing so.',
+      'Return the right foot to the starting position. Repeat for the left leg.',
+    ],
+  ),
+];
