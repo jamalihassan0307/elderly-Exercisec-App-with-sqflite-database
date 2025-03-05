@@ -160,7 +160,7 @@ class TimerState extends State<CustomWorkOutTimer>
   }
 
   TextStyle getProgressTextStyle() {
-    return TextStyle(fontSize: Theme.of(context).textTheme.headline1!.fontSize)
+    return TextStyle(fontSize: Theme.of(context).textTheme.headlineLarge!.fontSize)
         .merge(widget.progressTextStyle);
   }
 
