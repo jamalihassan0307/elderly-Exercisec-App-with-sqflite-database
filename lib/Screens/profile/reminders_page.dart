@@ -378,7 +378,7 @@ Future<void> scheduleNotification(int id, tz.TZDateTime time) async {
       _nextInstanceOfTenAM(time),
       channelSpecifics,
       payload: 'Test Payload',
-      androidAllowWhileIdle: true,
+      androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
       uiLocalNotificationDateInterpretation:
           UILocalNotificationDateInterpretation.absoluteTime,
       matchDateTimeComponents: DateTimeComponents.dayOfWeekAndTime);
