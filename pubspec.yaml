@@ -38,7 +38,7 @@ dependencies:
   intl: 
   flutter_local_notifications: 
   android_alarm_manager_plus: 
-  flutter_native_timezone:
+  flutter_native_timezone: ^2.0.0
   sqflite: 
   path:
 
