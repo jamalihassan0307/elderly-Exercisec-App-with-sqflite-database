@@ -10,7 +10,7 @@ final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterL
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 // Open the notification and show the reference.
-  const AndroidInitializationSettings initializationSettingsAndroid = AndroidInitializationSettings('@mipmap/logo');
+  const AndroidInitializationSettings initializationSettingsAndroid = AndroidInitializationSettings('logo');
 
   const InitializationSettings initializationSettings = InitializationSettings(android: initializationSettingsAndroid);
 
