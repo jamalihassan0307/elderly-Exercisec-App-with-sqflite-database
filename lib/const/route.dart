@@ -11,6 +11,7 @@ import 'package:ex_app/Screens/report/history_page.dart';
 import 'package:ex_app/Screens/report/report_page.dart';
 import 'package:ex_app/widgets/bottom_nav_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:ex_app/Screens/notification/snooze_page.dart';
 
 class RouteGenerator {
   static Route<dynamic> generateRoute(RouteSettings? settings) {
@@ -64,6 +65,12 @@ class RouteGenerator {
 
       case '/RemindersPage':
         return createRoute(child: const RemindersPage());
+
+      case '/snooze':
+        final args = settings?.arguments as Map<String, dynamic>;
+        return MaterialPageRoute(
+          builder: (_) => SnoozePage(notificationId: args['id']),
+        );
 
       default:
         // If there is no such named route in the switch statement

@@ -19,8 +19,12 @@ class RemindersPage extends StatefulWidget {
 
   @pragma('vm:entry-point')
   static Future<void> handleSnooze(int id) async {
-    final snoozeTime = tz.TZDateTime.now(tz.local).add(const Duration(minutes: 10));
-    await scheduleNotification(id, snoozeTime);
+    final snoozeTime = tz.TZDateTime.now(tz.local).add(const Duration(minutes: 1));
+    await scheduleNotification(
+      id,
+      snoozeTime,
+      isSnooze: true,
+    );
   }
 
   @override
@@ -291,14 +295,22 @@ class _RemindersPageState extends State<RemindersPage> {
       floatingActionButton: FloatingActionButton(
         backgroundColor: blue,
         onPressed: () async {
-          var selectedTime = await showTimePicker(
-            context: context,
-            initialTime: TimeOfDay.now(),
-          );
+          // var selectedTime = await showTimePicker(
+          //   context: context,
+          //   initialTime: TimeOfDay.now(),
+          // );
 
+          var now = DateTime.now().add(const Duration(minutes: 1));
+          var selectedTime = TimeOfDay(hour: now.hour, minute: now.minute);
           if (selectedTime != null) {
             final now = DateTime.now();
-            var selectedDateTime = DateTime(now.year, now.month, now.day, selectedTime.hour, selectedTime.minute);
+            var selectedDateTime = DateTime(
+              now.year,
+              now.month,
+              now.day,
+              selectedTime.hour,
+              selectedTime.minute,
+            );
             var weekID = now.toIso8601String();
             //  setState(() {
             alarmTime = selectedDateTime;
@@ -320,10 +332,6 @@ class _RemindersPageState extends State<RemindersPage> {
         child: const Icon(Icons.add),
       ),
     );
-  }
-
-  void alarmStop(int id) async {
-    await flutterLocalNotificationsPlugin.cancel(id);
   }
 
   Future alarmOn(int id, DateTime scheduledTime) async {
@@ -377,7 +385,7 @@ class _RemindersPageState extends State<RemindersPage> {
   }
 }
 
-Future<void> scheduleNotification(int id, tz.TZDateTime time) async {
+Future<void> scheduleNotification(int id, tz.TZDateTime time, {bool isSnooze = false}) async {
   final androidChannel = AndroidNotificationDetails(
     'exercise_reminders',
     'Exercise Reminders',
@@ -410,8 +418,8 @@ Future<void> scheduleNotification(int id, tz.TZDateTime time) async {
 
   await flutterLocalNotificationsPlugin.zonedSchedule(
     id,
-    'Exercise Time!',
-    'Time for your workout routine',
+    isSnooze ? 'Snoozed Exercise Reminder' : 'Exercise Time!',
+    isSnooze ? 'Your exercise reminder was snoozed for 10 minutes' : 'Time for your workout routine',
     time,
     notificationDetails,
     androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
