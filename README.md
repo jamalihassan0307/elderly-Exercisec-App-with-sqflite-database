@@ -1,4 +1,3 @@
-
 <div align="center">
   <h1>
     <img src="assets\images\Logo.png" width="80px"><br/>
@@ -37,15 +36,93 @@ The Elderly Exercise App is a Flutter application designed to help elderly users
 
 ## 📸 Screenshots
 
-### Banner
-
-![Banner](screenshots/banner.png)
+### App Flow
 
 <table border="1">
   <tr>
     <td align="center">
       <img src="screenshots/splash.png" alt="Splash Screen" width="250"/>
       <p><b>Splash Screen</b></p>
+    </td>
+    <td align="center">
+      <img src="screenshots/home_page.png" alt="Home Page" width="250"/>
+      <p><b>Home Page</b></p>
+    </td>
+    <td align="center">
+      <img src="screenshots/exercise_details_page.png" alt="Exercise Details" width="250"/>
+      <p><b>Exercise Details</b></p>
+    </td>
+  </tr>
+  <tr>
+    <td align="center">
+      <img src="screenshots/get_ready.png" alt="Get Ready" width="250"/>
+      <p><b>Get Ready</b></p>
+    </td>
+    <td align="center">
+      <img src="screenshots/get_ready_1.png" alt="Workout In Progress" width="250"/>
+      <p><b>Workout In Progress</b></p>
+    </td>
+    <td align="center">
+      <img src="screenshots/get_ready_2.png" alt="Exercise Guide" width="250"/>
+      <p><b>Exercise Guide</b></p>
+    </td>
+  </tr>
+  <tr>
+    <td align="center">
+      <img src="screenshots/view_all_exercise.png" alt="All Exercises" width="250"/>
+      <p><b>All Exercises</b></p>
+    </td>
+    <td align="center">
+      <img src="screenshots/view_all_exercise_1.png" alt="Exercise List" width="250"/>
+      <p><b>Exercise List</b></p>
+    </td>
+    <td align="center">
+      <img src="screenshots/congratulations.png" alt="Completion" width="250"/>
+      <p><b>Workout Complete</b></p>
+    </td>
+  </tr>
+</table>
+
+### Progress & Reminders
+
+<table border="1">
+  <tr>
+    <td align="center">
+      <img src="screenshots/progress_page.png" alt="Progress Page" width="250"/>
+      <p><b>Progress Tracking</b></p>
+    </td>
+    <td align="center">
+      <img src="screenshots/workout_history.png" alt="Workout History" width="250"/>
+      <p><b>Workout History</b></p>
+    </td>
+    <td align="center">
+      <img src="screenshots/reminders.png" alt="Reminders" width="250"/>
+      <p><b>Reminders</b></p>
+    </td>
+  </tr>
+  <tr>
+    <td align="center">
+      <img src="screenshots/reminders_1.png" alt="Set Reminder" width="250"/>
+      <p><b>Set Reminder</b></p>
+    </td>
+    <td align="center">
+      <img src="screenshots/reminders_notification_ringing.png" alt="Notification" width="250"/>
+      <p><b>Reminder Notification</b></p>
+    </td>
+    <td align="center">
+      <img src="screenshots/snooze_page.png" alt="Snooze" width="250"/>
+      <p><b>Snooze Options</b></p>
+    </td>
+  </tr>
+</table>
+
+### Profile & Settings
+
+<table border="1">
+  <tr>
+    <td align="center">
+      <img src="screenshots/profile_page.png" alt="Profile Page" width="250"/>
+      <p><b>Profile Page</b></p>
     </td>
     <td align="center">
       <img src="screenshots/name_selecter.png" alt="Name Selection" width="250"/>
@@ -68,34 +145,6 @@ The Elderly Exercise App is a Flutter application designed to help elderly users
     <td align="center">
       <img src="screenshots/dob_selecter.png" alt="Date of Birth Selection" width="250"/>
       <p><b>Date of Birth Selection</b></p>
-    </td>
-  </tr>
-  <tr>
-    <td align="center">
-      <img src="screenshots/home_page.png" alt="Home Page" width="250"/>
-      <p><b>Home Page</b></p>
-    </td>
-    <td align="center">
-      <img src="screenshots/exercise_details_page.png" alt="Exercise Details" width="250"/>
-      <p><b>Exercise Details</b></p>
-    </td>
-    <td align="center">
-      <img src="screenshots/get_ready.png" alt="Get Ready Screen" width="250"/>
-      <p><b>Get Ready Screen</b></p>
-    </td>
-  </tr>
-  <tr>
-    <td align="center">
-      <img src="screenshots/profile_page.png" alt="Profile Page" width="250"/>
-      <p><b>Profile Page</b></p>
-    </td>
-    <td align="center">
-      <img src="screenshots/progress_page.png" alt="Progress Page" width="250"/>
-      <p><b>Progress Page</b></p>
-    </td>
-    <td align="center">
-      <img src="screenshots/workout_history.png" alt="Workout History" width="250"/>
-      <p><b>Workout History</b></p>
     </td>
   </tr>
 </table>

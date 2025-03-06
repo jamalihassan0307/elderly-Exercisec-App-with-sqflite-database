@@ -272,11 +272,11 @@ class _ProfilePageState extends State<ProfilePage> {
           Center(
             child: Text(
               bmiData,
-              style: TextStyle(
+                  style: TextStyle(
                 color: const Color(0xFF1A237E),
                 fontSize: 2 * SizeConfig.text!,
-                fontWeight: FontWeight.w600,
-              ),
+                    fontWeight: FontWeight.w600,
+                  ),
             ),
           ),
         ],
@@ -302,8 +302,8 @@ class _ProfilePageState extends State<ProfilePage> {
           'notification.PNG',
           'Setup reminders to exercise',
           () => Navigator.of(context).pushNamed('/RemindersPage'),
-        ),
-        h10,
+                ),
+                h10,
         _buildSettingTile(
           'Reset Data',
           'reset.png',
@@ -317,75 +317,75 @@ class _ProfilePageState extends State<ProfilePage> {
 
   Widget _buildBMIIndicator() {
     return SizedBox(
-      height: 20 * SizeConfig.height!,
-      child: Stack(
-        children: [
-          Container(
-            height: 10 * SizeConfig.height!,
-            margin: EdgeInsets.only(top: 2.5 * SizeConfig.height!),
+                  height: 20 * SizeConfig.height!,
+                  child: Stack(
+                    children: [
+                      Container(
+                        height: 10 * SizeConfig.height!,
+                        margin: EdgeInsets.only(top: 2.5 * SizeConfig.height!),
             child: SingleChildScrollView(
               scrollDirection: Axis.horizontal,
               physics: const BouncingScrollPhysics(),
-              child: Row(
-                children: [
-                  colorTag(
-                    color: const Color(0xFFB2D1CF),
-                    width: 4.2 * SizeConfig.width!,
-                    value: '15',
-                  ),
-                  w2,
-                  colorTag(
-                    color: const Color(0xFF4C6C93),
-                    width: 8 * SizeConfig.width!,
-                    value: '16',
-                  ),
-                  w2,
-                  colorTag(
-                    color: const Color(0xFF74DD78),
-                    width: 31 * SizeConfig.width!,
-                    value: '18.5',
-                  ),
-                  w2,
-                  colorTag(
-                    color: const Color(0xFFDCE683),
-                    width: 16 * SizeConfig.width!,
-                    value: '25',
-                  ),
-                  w2,
-                  colorTag(
-                    color: const Color(0xFFFEB447),
-                    width: 16 * SizeConfig.width!,
-                    value: '30',
-                  ),
-                  w2,
+                        child: Row(
+                          children: [
+                            colorTag(
+                              color: const Color(0xFFB2D1CF),
+                              width: 4.2 * SizeConfig.width!,
+                              value: '15',
+                            ),
+                            w2,
+                            colorTag(
+                              color: const Color(0xFF4C6C93),
+                              width: 8 * SizeConfig.width!,
+                              value: '16',
+                            ),
+                            w2,
+                            colorTag(
+                              color: const Color(0xFF74DD78),
+                              width: 31 * SizeConfig.width!,
+                              value: '18.5',
+                            ),
+                            w2,
+                            colorTag(
+                              color: const Color(0xFFDCE683),
+                              width: 16 * SizeConfig.width!,
+                              value: '25',
+                            ),
+                            w2,
+                            colorTag(
+                              color: const Color(0xFFFEB447),
+                              width: 16 * SizeConfig.width!,
+                              value: '30',
+                            ),
+                            w2,
                   colorTag(color: const Color(0xFFEA4450), width: 16 * SizeConfig.width!, value: '35', value2: '40'),
                 ],
               ),
-            ),
-          ),
-          bmiValue != 0.0
-              ? Positioned(
-                  top: 0,
-                  left: level > 37 ? level - 4 * SizeConfig.width! : level,
-                  child: Text(
-                    bmiValue.toString(),
-                    style: TextStyle(
-                      color: black.withOpacity(0.6),
-                      fontSize: 1.7 * SizeConfig.text!,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                )
-              : const SizedBox(),
-          Positioned(
-            top: 1.8 * SizeConfig.height!,
-            left: bmiValue != 0.0 ? level : 0.5 * SizeConfig.width!,
-            child: Container(
-              width: 2.0,
-              color: black,
-              height: 6.2 * SizeConfig.height!,
-            ),
-          ),
+                        ),
+                      ),
+                      bmiValue != 0.0
+                          ? Positioned(
+                              top: 0,
+                              left: level > 37 ? level - 4 * SizeConfig.width! : level,
+                              child: Text(
+                                bmiValue.toString(),
+                                style: TextStyle(
+                                  color: black.withOpacity(0.6),
+                                  fontSize: 1.7 * SizeConfig.text!,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            )
+                          : const SizedBox(),
+                      Positioned(
+                        top: 1.8 * SizeConfig.height!,
+                        left: bmiValue != 0.0 ? level : 0.5 * SizeConfig.width!,
+                        child: Container(
+                          width: 2.0,
+                          color: black,
+                          height: 6.2 * SizeConfig.height!,
+                        ),
+                      ),
         ],
       ),
     );
