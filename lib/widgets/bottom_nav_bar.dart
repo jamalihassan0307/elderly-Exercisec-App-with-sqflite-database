@@ -7,6 +7,7 @@ import 'package:ex_app/Screens/profile/profile_page.dart';
 import 'package:ex_app/Screens/report/report_page.dart';
 import 'package:ex_app/widgets/picker.dart';
 import 'package:flutter/material.dart';
+import 'package:ex_app/Screens/notification/snooze_page.dart';
 
 class BottomNavBar extends StatefulWidget {
   final ScreenArguments newArgu;
@@ -28,6 +29,31 @@ class _BottomNavBarState extends State<BottomNavBar> {
       isJump = widget.newArgu.isJump;
     });
     super.initState();
+  }
+
+  void _handleNotificationNavigation(int notificationId) {
+    Navigator.push(
+      context,
+      PageRouteBuilder(
+        pageBuilder: (context, animation, secondaryAnimation) => SnoozePage(
+          notificationId: notificationId,
+        ),
+        transitionsBuilder: (context, animation, secondaryAnimation, child) {
+          const begin = Offset(0.0, 1.0);
+          const end = Offset.zero;
+          const curve = Curves.easeInOutCubic;
+
+          var tween = Tween(begin: begin, end: end).chain(
+            CurveTween(curve: curve),
+          );
+
+          return SlideTransition(
+            position: animation.drive(tween),
+            child: child,
+          );
+        },
+      ),
+    );
   }
 
   @override

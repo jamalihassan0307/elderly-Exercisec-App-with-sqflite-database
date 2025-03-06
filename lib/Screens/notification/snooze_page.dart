@@ -8,6 +8,7 @@ import 'package:ex_app/Screens/profile/reminders_page.dart';
 import 'dart:async';
 // import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:audioplayers/audioplayers.dart';
+import 'package:ex_app/const/size/size_config.dart';
 
 class SnoozePage extends StatefulWidget {
   final int notificationId;
@@ -18,22 +19,42 @@ class SnoozePage extends StatefulWidget {
   State<SnoozePage> createState() => _SnoozePageState();
 }
 
-class _SnoozePageState extends State<SnoozePage> {
+class _SnoozePageState extends State<SnoozePage> with SingleTickerProviderStateMixin {
   Timer? _timer;
   int _remainingSeconds = 60;
   late AudioPlayer audioPlayer;
+  late AnimationController _animationController;
+  late Animation<double> _scaleAnimation;
+  late Animation<double> _fadeAnimation;
 
   @override
   void initState() {
     super.initState();
+    _initializeAnimations();
     _startSnoozeTimer();
     _startAlarmSound();
+  }
+
+  void _initializeAnimations() {
+    _animationController = AnimationController(
+      duration: const Duration(milliseconds: 1000),
+      vsync: this,
+    );
+
+    _scaleAnimation = Tween<double>(begin: 0.5, end: 1.0).animate(
+      CurvedAnimation(parent: _animationController, curve: Curves.elasticOut),
+    );
+
+    _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
+      CurvedAnimation(parent: _animationController, curve: Curves.easeIn),
+    );
+
+    _animationController.forward();
   }
 
   Future<void> _startAlarmSound() async {
     audioPlayer = AudioPlayer();
     await audioPlayer.play(AssetSource('sound.mp3'));
-    // Loop the sound
     audioPlayer.setReleaseMode(ReleaseMode.loop);
   }
 
@@ -46,7 +67,6 @@ class _SnoozePageState extends State<SnoozePage> {
           } else {
             _timer?.cancel();
             _handleSnooze();
-            Navigator.of(context).pop();
           }
         });
       }
@@ -55,9 +75,19 @@ class _SnoozePageState extends State<SnoozePage> {
 
   void _handleSnooze() async {
     _timer?.cancel();
-    audioPlayer.stop(); // Stop the sound
+    audioPlayer.stop();
+    await _animationController.reverse();
     await flutterLocalNotificationsPlugin.cancel(widget.notificationId);
     await RemindersPage.handleSnooze(widget.notificationId);
+    if (mounted) {
+      Navigator.of(context).pop();
+    }
+  }
+
+  void _handleDismiss() async {
+    audioPlayer.stop();
+    await _animationController.reverse();
+    await flutterLocalNotificationsPlugin.cancel(widget.notificationId);
     if (mounted) {
       Navigator.of(context).pop();
     }
@@ -72,7 +102,8 @@ class _SnoozePageState extends State<SnoozePage> {
   @override
   void dispose() {
     _timer?.cancel();
-    audioPlayer.dispose(); 
+    audioPlayer.dispose();
+    _animationController.dispose();
     super.dispose();
   }
 
@@ -81,76 +112,100 @@ class _SnoozePageState extends State<SnoozePage> {
     return WillPopScope(
       onWillPop: () async => false,
       child: Scaffold(
-        backgroundColor: Colors.black87,
-        body: GestureDetector(
-          onHorizontalDragEnd: (details) {
-            if (details.primaryVelocity! > 0) {
-              _handleSnooze();
-            } else if (details.primaryVelocity! < 0) {
-              audioPlayer.stop(); // Stop the sound
-              flutterLocalNotificationsPlugin.cancel(widget.notificationId);
-              Navigator.pop(context);
-            }
-          },
-          child: Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Icon(
-                  Icons.alarm,
-                  size: 100,
-                  color: Colors.white,
-                ),
-                const SizedBox(height: 20),
-                Text(
-                  _timeDisplay,
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 48,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                const SizedBox(height: 40),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        backgroundColor: Colors.black.withOpacity(0.95),
+        body: AnimatedBuilder(
+          animation: _animationController,
+          builder: (context, child) {
+            return FadeTransition(
+              opacity: _fadeAnimation,
+              child: Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    _buildSwipeHint(
-                      Icons.close,
-                      'Swipe left to dismiss',
-                      Colors.red,
+                    ScaleTransition(
+                      scale: _scaleAnimation,
+                      child: Container(
+                        padding: EdgeInsets.all(4 * SizeConfig.height!),
+                        decoration: BoxDecoration(
+                          color: blue.withOpacity(0.1),
+                          shape: BoxShape.circle,
+                        ),
+                        child: Icon(
+                          Icons.alarm,
+                          size: 15 * SizeConfig.height!,
+                          color: blue,
+                        ),
+                      ),
                     ),
-                    _buildSwipeHint(
-                      Icons.snooze,
-                      'Swipe right to snooze',
-                      blue,
+                    SizedBox(height: 3 * SizeConfig.height!),
+                    Text(
+                      _timeDisplay,
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 8 * SizeConfig.text!,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    SizedBox(height: 5 * SizeConfig.height!),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        _buildActionButton(
+                          icon: Icons.close,
+                          label: 'Dismiss',
+                          color: Colors.red,
+                          onTap: _handleDismiss,
+                        ),
+                        _buildActionButton(
+                          icon: Icons.snooze,
+                          label: 'Snooze',
+                          color: blue,
+                          onTap: _handleSnooze,
+                        ),
+                      ],
                     ),
                   ],
                 ),
-              ],
-            ),
-          ),
+              ),
+            );
+          },
         ),
       ),
     );
   }
 
-  Widget _buildSwipeHint(IconData icon, String text, Color color) {
-    return Column(
-      children: [
-        Icon(
-          icon,
-          color: color,
-          size: 30,
+  Widget _buildActionButton({
+    required IconData icon,
+    required String label,
+    required Color color,
+    required VoidCallback onTap,
+  }) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: EdgeInsets.symmetric(
+          horizontal: 5 * SizeConfig.width!,
+          vertical: 2 * SizeConfig.height!,
         ),
-        const SizedBox(height: 8),
-        Text(
-          text,
-          style: const TextStyle(
-            color: Colors.white70,
-            fontSize: 14,
-          ),
+        decoration: BoxDecoration(
+          color: color.withOpacity(0.1),
+          borderRadius: BorderRadius.circular(2 * SizeConfig.height!),
         ),
-      ],
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(icon, color: color, size: 4 * SizeConfig.height!),
+            SizedBox(height: 1 * SizeConfig.height!),
+            Text(
+              label,
+              style: TextStyle(
+                color: color,
+                fontSize: 2 * SizeConfig.text!,
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

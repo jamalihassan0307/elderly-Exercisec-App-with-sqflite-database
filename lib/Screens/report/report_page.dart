@@ -12,17 +12,33 @@ class ReportsPage extends StatefulWidget {
   State<ReportsPage> createState() => _ReportsPageState();
 }
 
-class _ReportsPageState extends State<ReportsPage> {
+class _ReportsPageState extends State<ReportsPage> with SingleTickerProviderStateMixin {
   List<Reports> reports = [];
   List<Reports> history = [];
   int totWorkout = 0;
   double totKacl = 0.0, totTime = 0.0;
   String timeTo = '';
   String time = '';
+  late AnimationController _animationController;
+
   @override
   void initState() {
-    showData();
     super.initState();
+    _initAnimation();
+    showData();
+  }
+
+  void _initAnimation() {
+    _animationController = AnimationController(
+      duration: const Duration(milliseconds: 1200),
+      vsync: this,
+    )..forward();
+  }
+
+  @override
+  void dispose() {
+    _animationController.dispose();
+    super.dispose();
   }
 
   Future showData() async {
@@ -37,8 +53,7 @@ class _ReportsPageState extends State<ReportsPage> {
       totWorkout = totWorkout + int.parse(reports[i].workouts);
       totKacl = totKacl + double.parse(reports[i].kcal);
       totTime = totTime + double.parse(reports[i].duration);
-      var date =
-          '${reports[i].time.year}${reports[i].time.month}${reports[i].time.day}';
+      var date = '${reports[i].time.year}${reports[i].time.month}${reports[i].time.day}';
 
       history = await ExerciseDatabase.instance.showHistory(date);
     }
@@ -64,258 +79,310 @@ class _ReportsPageState extends State<ReportsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: white,
-        elevation: 0,
-        centerTitle: true,
-        title: Text(
-          'Reports',
-          style: TextStyle(
-            color: black.withOpacity(0.7),
-            fontSize: 2.9 * SizeConfig.text!,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-      ),
-      body: Padding(
-        padding: EdgeInsets.symmetric(
-          horizontal: 2 * SizeConfig.height!,
-          vertical: 3 * SizeConfig.height!,
-        ),
-        child: Column(
-          children: [
-            Container(
-              padding: EdgeInsets.all(1.5 * SizeConfig.height!),
-              // height: 30 * SizeConfig.height!,
-              decoration: BoxDecoration(
-                color: white,
-                borderRadius: BorderRadius.circular(1 * SizeConfig.height!),
-                boxShadow: [
-                  BoxShadow(
-                    color: blueShadow.withOpacity(0.5),
-                    blurRadius: 10.0,
-                    spreadRadius: 1,
-                    offset: const Offset(1, 5),
-                  ),
-                ],
-              ),
+      body: CustomScrollView(
+        physics: const BouncingScrollPhysics(),
+        slivers: [
+          _buildAppBar(),
+          SliverToBoxAdapter(
+            child: Padding(
+              padding: EdgeInsets.all(2 * SizeConfig.height!),
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    'Total Summary',
-                    style: TextStyle(
-                      color: darkBlue.withOpacity(0.7),
-                      letterSpacing: 1,
-                      fontSize: 2.5 * SizeConfig.text!,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                  Divider(
-                    thickness: 2,
-                    color: blue.withOpacity(0.5),
-                  ),
-                  h10,
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      reportTotalData(
-                        name: 'Workouts',
-                        imagePath: 'workout',
-                        data: totWorkout.toString(),
-                      ),
-                      w40,
-                      reportTotalData(
-                        name: 'Kcal',
-                        imagePath: 'gas',
-                        data: totKacl.toStringAsFixed(0),
-                      ),
-                      w40,
-                      reportTotalData(
-                        name: 'Duraton',
-                        imagePath: 'time',
-                        data: timeTo,
-                        exte: time,
-                      ),
-                    ],
-                  ),
+                  _buildSummaryCard(),
+                  h30,
+                  _buildHistorySection(),
+                  h20,
+                  _buildWeeklyProgress(),
                 ],
               ),
             ),
-            h50,
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildAppBar() {
+    return SliverAppBar(
+      expandedHeight: 120,
+      floating: false,
+      pinned: true,
+      backgroundColor: const Color(0xFF1A237E),
+      flexibleSpace: FlexibleSpaceBar(
+        title: const Text(
+          'Your Progress',
+          style: TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        background: Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [
+                const Color(0xFF303F9F),
+                const Color(0xFF1A237E),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildSummaryCard() {
+    return SlideTransition(
+      position: Tween<Offset>(
+        begin: const Offset(0, 0.3),
+        end: Offset.zero,
+      ).animate(CurvedAnimation(
+        parent: _animationController,
+        curve: Curves.easeOut,
+      )),
+      child: Container(
+        padding: EdgeInsets.all(2 * SizeConfig.height!),
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [
+              const Color(0xFFE3F2FD),
+              const Color(0xFFBBDEFB),
+            ],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
+          borderRadius: BorderRadius.circular(2 * SizeConfig.height!),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.1),
+              blurRadius: 10,
+              offset: const Offset(0, 4),
+            ),
+          ],
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  'History',
+                  'Total Summary',
                   style: TextStyle(
-                    color: black.withOpacity(0.7),
-                    letterSpacing: 1,
+                    color: const Color(0xFF1A237E),
                     fontSize: 2.5 * SizeConfig.text!,
-                    fontWeight: FontWeight.w600,
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
-                IconButton(
-                  onPressed: () {
-                    Navigator.of(context).pushNamed('/HistoryPage');
-                  },
-                  icon: const Icon(
-                    Icons.arrow_forward_ios_outlined,
-                    color: darkBlue,
-                  ),
-                )
+                Icon(
+                  Icons.insights_rounded,
+                  color: const Color(0xFF1A237E),
+                  size: 24,
+                ),
               ],
+            ),
+            Divider(
+              color: const Color(0xFF1A237E).withOpacity(0.2),
+              thickness: 2,
             ),
             h20,
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                for (int i = 6; i >= 0; i--) _getWeek(i, reports),
+                _buildStatItem(
+                  icon: 'workout',
+                  label: 'Workouts',
+                  value: totWorkout.toString(),
+                ),
+                _buildStatItem(
+                  icon: 'gas',
+                  label: 'Kcal',
+                  value: totKacl.toStringAsFixed(0),
+                ),
+                _buildStatItem(
+                  icon: 'time',
+                  label: 'Duration',
+                  value: timeTo,
+                  subtitle: time,
+                ),
               ],
             ),
-            // h40,
-            // RichText(
-            //   text: TextSpan(
-            //     children: [
-            //       TextSpan(
-            //         text: '$count ',
-            //         style: TextStyle(
-            //           color: red.withOpacity(0.7),
-            //           fontSize: 2.5 * SizeConfig.text!,
-            //           fontWeight: FontWeight.w600,
-            //         ),
-            //       ),
-            //       TextSpan(
-            //         text: count > 1 ? ' Days in a row' : ' Day in a row',
-            //         style: TextStyle(
-            //           color: black.withOpacity(0.7),
-            //           fontSize: 2.5 * SizeConfig.text!,
-            //           letterSpacing: 1,
-            //           fontWeight: FontWeight.w600,
-            //         ),
-            //       )
-            //     ],
-            //   ),
-            // ),
           ],
         ),
       ),
     );
   }
 
-  Column reportTotalData({
-    required String name,
-    required String imagePath,
-    required String data,
-    String? exte,
+  Widget _buildStatItem({
+    required String icon,
+    required String label,
+    required String value,
+    String? subtitle,
   }) {
+    return FadeTransition(
+      opacity: _animationController,
+      child: Column(
+        children: [
+          Container(
+            padding: const EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              color: const Color(0xFF303F9F).withOpacity(0.9),
+              shape: BoxShape.circle,
+            ),
+            child: Image.asset(
+              'assets/icons/$icon.png',
+              color: Colors.white,
+              height: 3 * SizeConfig.height!,
+            ),
+          ),
+          h10,
+          Text(
+            label,
+            style: TextStyle(
+              color: const Color(0xFF1A237E).withOpacity(0.7),
+              fontSize: 1.8 * SizeConfig.text!,
+            ),
+          ),
+          h10,
+          Text(
+            value,
+            style: TextStyle(
+              color: const Color(0xFF1A237E),
+              fontSize: 2.2 * SizeConfig.text!,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          if (subtitle != null) ...[
+            h5,
+            Text(
+              subtitle,
+              style: TextStyle(
+                color: const Color(0xFF1A237E).withOpacity(0.7),
+                fontSize: 1.5 * SizeConfig.text!,
+              ),
+            ),
+          ],
+        ],
+      ),
+    );
+  }
+
+  Widget _buildHistorySection() {
     return Column(
       children: [
-        CircleAvatar(
-          radius: 2.5 * SizeConfig.height!,
-          backgroundColor: blue.withOpacity(0.2),
-          child: Image.asset(
-            'assets/icons/$imagePath.png',
-            color: darkBlue,
-            height: 2.6 * SizeConfig.height!,
-          ),
-        ),
-        h10,
-        Text(
-          name,
-          style: TextStyle(
-            color: blue.withOpacity(0.9),
-            letterSpacing: 1,
-            fontSize: 1.9 * SizeConfig.text!,
-            fontWeight: FontWeight.w600,
-          ),
-        ),
-        h10,
-        Text(
-          data,
-          style: TextStyle(
-            color: black.withOpacity(0.6),
-            letterSpacing: 1,
-            fontSize: 2.2 * SizeConfig.text!,
-            fontWeight: FontWeight.w600,
-          ),
-        ),
-        h10,
-        (exte != null)
-            ? Text(
-                exte,
-                style: TextStyle(
-                  color: blue.withOpacity(0.9),
-                  letterSpacing: 1,
-                  fontSize: 1.5 * SizeConfig.text!,
-                  fontWeight: FontWeight.w600,
-                ),
-              )
-            : Text(
-                '',
-                style: TextStyle(
-                  letterSpacing: 1,
-                  fontSize: 1.5 * SizeConfig.text!,
-                  fontWeight: FontWeight.w600,
-                ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              'Weekly Activity',
+              style: TextStyle(
+                color: const Color(0xFF1A237E),
+                fontSize: 2.5 * SizeConfig.text!,
+                fontWeight: FontWeight.bold,
               ),
+            ),
+            IconButton(
+              onPressed: () => Navigator.of(context).pushNamed('/HistoryPage'),
+              icon: const Icon(
+                Icons.calendar_month_rounded,
+                color: Color(0xFF1A237E),
+              ),
+            ),
+          ],
+        ),
+        h20,
+        _buildWeeklyProgress(),
       ],
     );
   }
 
-  Widget _getWeek(index, reports) {
+  Widget _buildWeeklyProgress() {
+    return Container(
+      padding: EdgeInsets.all(2 * SizeConfig.height!),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(2 * SizeConfig.height!),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.05),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children: [
+          for (int i = 6; i >= 0; i--) _buildDayProgress(i),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildDayProgress(int index) {
     var now = DateTime.now();
     var day = now.subtract(Duration(days: index));
     var dayName = _getWeekName(day);
+    bool isComplete = false;
 
-    bool isFind = false;
     if (reports.isNotEmpty) {
-      for (int i = 0; reports.length > i; i++) {
-        if ('${day.month}${day.day}' ==
-            '${reports[i].time.month}${reports[i].time.day}') {
-          isFind = true;
+      for (var report in reports) {
+        if ('${day.month}${day.day}' == '${report.time.month}${report.time.day}') {
+          isComplete = true;
+          break;
         }
       }
     }
 
-    return Column(
-      children: [
-        Text(dayName),
-        h10,
-        Container(
-          height: 40.0,
-          width: 40.0,
-          decoration: BoxDecoration(
-            color: isFind ? blueShadow : white,
-            shape: BoxShape.circle,
-            boxShadow: [
-              BoxShadow(
-                color: blueShadow.withOpacity(0.5),
-                blurRadius: 10.0,
-                spreadRadius: 1,
-                offset: const Offset(1, 5),
-              ),
-            ],
+    return FadeTransition(
+      opacity: _animationController,
+      child: Column(
+        children: [
+          Text(
+            dayName,
+            style: TextStyle(
+              color: const Color(0xFF1A237E).withOpacity(0.7),
+              fontWeight: FontWeight.w500,
+            ),
           ),
-          child: Center(
-            child: isFind
-                ? Image.asset(
-                    'assets/icons/done.png',
-                    color: white,
-                    height: 20.0,
-                  )
-                : Text(
-                    day.day.toString(),
-                    style: TextStyle(
-                      color: black.withOpacity(0.7),
-                      fontSize: 18.0,
-                      letterSpacing: 1,
-                      fontWeight: FontWeight.w600,
+          h10,
+          Container(
+            height: 45,
+            width: 45,
+            decoration: BoxDecoration(
+              gradient: isComplete
+                  ? const LinearGradient(
+                      colors: [Color(0xFF303F9F), Color(0xFF1A237E)],
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                    )
+                  : null,
+              color: isComplete ? null : Colors.white,
+              shape: BoxShape.circle,
+              boxShadow: [
+                BoxShadow(
+                  color: const Color(0xFF1A237E).withOpacity(0.2),
+                  blurRadius: 8,
+                  offset: const Offset(0, 4),
+                ),
+              ],
+            ),
+            child: Center(
+              child: isComplete
+                  ? const Icon(Icons.done_rounded, color: Colors.white)
+                  : Text(
+                      day.day.toString(),
+                      style: TextStyle(
+                        color: const Color(0xFF1A237E),
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
-                  ),
+            ),
           ),
-        )
-      ],
+        ],
+      ),
     );
   }
 

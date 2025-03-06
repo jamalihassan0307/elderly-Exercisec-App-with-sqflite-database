@@ -177,9 +177,7 @@ class _ReadyPageState extends State<ReadyPage> with TickerProviderStateMixin {
                           fit: BoxFit.cover,
                         ),
                         Container(
-                          color: isPause == true || count != 0
-                              ? white.withOpacity(0.5)
-                              : Colors.transparent,
+                          color: isPause == true || count != 0 ? white.withOpacity(0.5) : Colors.transparent,
                         )
                       ],
                     ),
@@ -250,8 +248,7 @@ class _ReadyPageState extends State<ReadyPage> with TickerProviderStateMixin {
                         builder: (context) {
                           return AppDialog(
                             title: 'End Workout',
-                            subTitle:
-                                "Are you sure you want to End current Workout session?",
+                            subTitle: "Are you sure you want to End current Workout session?",
                             onContinue: () {
                               Navigator.of(context).pushNamed(
                                 '/ViewAllExercisePage',
@@ -299,8 +296,7 @@ class _ReadyPageState extends State<ReadyPage> with TickerProviderStateMixin {
                           color: white,
                           shape: BoxShape.circle,
                         ),
-                        margin: EdgeInsets.symmetric(
-                            vertical: 1 * SizeConfig.height!),
+                        margin: EdgeInsets.symmetric(vertical: 1 * SizeConfig.height!),
                         child: workOutStart
                             ? CustomWorkOutTimer(
                                 child: SizedBox(
@@ -310,21 +306,15 @@ class _ReadyPageState extends State<ReadyPage> with TickerProviderStateMixin {
                                   child: smallcircletimer(),
                                 ),
                                 controller: workoutTimer,
-                                duration: widget
-                                    .w.level.exercise[selectIndex].duration,
+                                duration: widget.w.level.exercise[selectIndex].duration,
                                 timerStyle: WOTimerStyle.ring,
                                 onStart: totalTimer.start,
                                 onEnd: handleTimerOnEnd3,
                                 backgroundColor: blue.withOpacity(0.2),
                                 progressIndicatorColor: red.withOpacity(0.8),
-                                progressIndicatorDirection:
-                                    WOTimerProgressIndicatorDirection
-                                        .counterClockwise,
-                                progressTextCountDirection:
-                                    WOTimerProgressTextCountDirection
-                                        .singleCount,
-                                progressTextStyle:
-                                    const TextStyle(color: blue, fontSize: 45),
+                                progressIndicatorDirection: WOTimerProgressIndicatorDirection.counterClockwise,
+                                progressTextCountDirection: WOTimerProgressTextCountDirection.singleCount,
+                                progressTextStyle: const TextStyle(color: blue, fontSize: 45),
                                 strokeWidth: 8,
                               )
                             : CustomTimer(
@@ -341,10 +331,8 @@ class _ReadyPageState extends State<ReadyPage> with TickerProviderStateMixin {
                                 onEnd: handleTimerOnEnd,
                                 backgroundColor: blue.withOpacity(0.3),
                                 progressIndicatorColor: darkBlue,
-                                progressIndicatorDirection:
-                                    TimerProgressIndicatorDirection.clockwise,
-                                progressTextCountDirection:
-                                    TimerProgressTextCountDirection.singleCount,
+                                progressIndicatorDirection: TimerProgressIndicatorDirection.clockwise,
+                                progressTextCountDirection: TimerProgressTextCountDirection.singleCount,
                                 progressTextStyle: const TextStyle(
                                   color: Colors.black,
                                   fontSize: 50,
@@ -365,8 +353,7 @@ class _ReadyPageState extends State<ReadyPage> with TickerProviderStateMixin {
                           ],
                           color: white,
                           shape: BoxShape.circle,
-                          border: Border.all(
-                              color: blue.withOpacity(0.6), width: 1.2),
+                          border: Border.all(color: blue.withOpacity(0.6), width: 1.2),
                         ),
                         child: Center(
                           child: Image.asset(
@@ -403,8 +390,7 @@ class _ReadyPageState extends State<ReadyPage> with TickerProviderStateMixin {
     );
   }
 
-  GestureDetector controlBtn(
-      {required String? image, required Function() onTap}) {
+  GestureDetector controlBtn({required String? image, required Function() onTap}) {
     return GestureDetector(
       onTap: onTap,
       child: Container(
