@@ -12,9 +12,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:intl/intl.dart';
 import 'package:timezone/timezone.dart' as tz;
+import 'dart:async';
 
 class RemindersPage extends StatefulWidget {
   const RemindersPage({Key? key}) : super(key: key);
+
+  @pragma('vm:entry-point')
+  static Future<void> handleSnooze(int id) async {
+    final snoozeTime = tz.TZDateTime.now(tz.local).add(const Duration(minutes: 10));
+    await scheduleNotification(id, snoozeTime);
+  }
 
   @override
   State<RemindersPage> createState() => _RemindersPageState();
@@ -26,11 +33,23 @@ class _RemindersPageState extends State<RemindersPage> {
   List<RepateAlarm> weekShort = [];
   late DateTime alarmTime;
   bool isLoading = false;
+  Timer? _timer;
+
   @override
   void initState() {
+    super.initState();
     alarmTime = DateTime.now();
     refreshNotes();
-    super.initState();
+    // Update the UI every second
+    _timer = Timer.periodic(const Duration(seconds: 1), (_) {
+      if (mounted) setState(() {});
+    });
+  }
+
+  @override
+  void dispose() {
+    _timer?.cancel();
+    super.dispose();
   }
 
   Future refreshNotes() async {
@@ -92,13 +111,25 @@ class _RemindersPageState extends State<RemindersPage> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text(
-                              time,
-                              style: TextStyle(
-                                color: black.withOpacity(0.7),
-                                fontSize: 3 * SizeConfig.text!,
-                                fontWeight: FontWeight.bold,
-                              ),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  time,
+                                  style: TextStyle(
+                                    color: black.withOpacity(0.7),
+                                    fontSize: 3 * SizeConfig.text!,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                Text(
+                                  getRemainingTime(remind.remindTime),
+                                  style: TextStyle(
+                                    color: blue,
+                                    fontSize: 2 * SizeConfig.text!,
+                                  ),
+                                ),
+                              ],
                             ),
                             Transform.scale(
                               scale: 0.7,
@@ -347,28 +378,46 @@ class _RemindersPageState extends State<RemindersPage> {
 }
 
 Future<void> scheduleNotification(int id, tz.TZDateTime time) async {
-  const androidChannel = AndroidNotificationDetails(
-    '0',
-    'reminder',
-    channelDescription: 'Exercise Reminder Notification',
-    icon: 'logo',
+  final androidChannel = AndroidNotificationDetails(
+    'exercise_reminders',
+    'Exercise Reminders',
+    channelDescription: 'Reminders for exercise routines',
     importance: Importance.max,
     priority: Priority.high,
-    sound: RawResourceAndroidNotificationSound('a_long_cold_sting'),
-    largeIcon: DrawableResourceAndroidBitmap('logo'),
+    sound: const RawResourceAndroidNotificationSound('iphone_15_original'),
+    playSound: true,
+    enableVibration: true,
+    fullScreenIntent: true,
+    actions: <AndroidNotificationAction>[
+      const AndroidNotificationAction(
+        'snooze',
+        'Snooze',
+        showsUserInterface: true,
+        cancelNotification: true,
+      ),
+      const AndroidNotificationAction(
+        'dismiss',
+        'Dismiss',
+        showsUserInterface: true,
+        cancelNotification: true,
+      ),
+    ],
+    category: AndroidNotificationCategory.alarm,
+    visibility: NotificationVisibility.public,
   );
-  const channelSpecifics = NotificationDetails(android: androidChannel);
+
+  final notificationDetails = NotificationDetails(android: androidChannel);
+
   await flutterLocalNotificationsPlugin.zonedSchedule(
-      id,
-      'Hello',
-      'I\'ll Remind you about the planned workout',
-      // _nextInstanceOfWeek(time),
-      _nextInstanceOfTenAM(time),
-      channelSpecifics,
-      payload: 'Test Payload',
-      androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
-      uiLocalNotificationDateInterpretation: UILocalNotificationDateInterpretation.absoluteTime,
-      matchDateTimeComponents: DateTimeComponents.dayOfWeekAndTime);
+    id,
+    'Exercise Time!',
+    'Time for your workout routine',
+    time,
+    notificationDetails,
+    androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
+    uiLocalNotificationDateInterpretation: UILocalNotificationDateInterpretation.absoluteTime,
+    payload: 'exercise_reminder_$id',
+  );
 }
 
 // tz.TZDateTime _nextInstanceOfTime() {
@@ -416,4 +465,19 @@ tz.TZDateTime _nextInstanceOfTenAM(tz.TZDateTime now) {
     scheduledDate = scheduledDate.add(const Duration(days: 1));
   }
   return scheduledDate;
+}
+
+String getRemainingTime(DateTime reminderTime) {
+  final now = DateTime.now();
+  final difference = reminderTime.difference(now);
+
+  if (difference.isNegative) return 'Overdue';
+
+  if (difference.inHours > 0) {
+    return '${difference.inHours}h ${difference.inMinutes.remainder(60)}m remaining';
+  } else if (difference.inMinutes > 0) {
+    return '${difference.inMinutes}m remaining';
+  } else {
+    return '${difference.inSeconds}s remaining';
+  }
 }

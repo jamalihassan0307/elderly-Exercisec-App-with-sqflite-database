@@ -4,6 +4,8 @@ import 'package:ex_app/const/route.dart';
 import 'package:ex_app/const/size/size_config.dart';
 import 'package:ex_app/Screens/splash_page.dart';
 
+final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+
 class ExerciseApp extends StatelessWidget {
   const ExerciseApp({Key? key}) : super(key: key);
 
@@ -26,6 +28,7 @@ class ExerciseApp extends StatelessWidget {
               initialRoute: '/',
               onGenerateRoute: RouteGenerator.generateRoute,
               home: const SplashPage(),
+              navigatorKey: navigatorKey,
             );
           },
         );

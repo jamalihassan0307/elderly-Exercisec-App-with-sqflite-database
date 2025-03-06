@@ -31,7 +31,7 @@ dependencies:
   flutter:
     sdk: flutter
   android_alarm_manager_plus: ^4.0.7
-  flutter_local_notifications: 
+  flutter_local_notifications: ^18.0.1
   cupertino_icons: ^1.0.2
   intl:
   timezone: ^0.10.0
@@ -63,6 +63,7 @@ flutter:
     - assets/gif/Beginner/
     - assets/gif/Intermediate/
     - assets/gif/Licw/
+    - assets/
 
   fonts:
     - family: gilroy

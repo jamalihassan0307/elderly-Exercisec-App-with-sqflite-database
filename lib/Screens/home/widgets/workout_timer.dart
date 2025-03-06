@@ -20,10 +20,8 @@ class CustomWorkOutTimer extends StatefulWidget {
     this.timerStyle = WOTimerStyle.ring,
     this.displayProgressIndicator = true,
     this.displayProgressText = true,
-    this.progressTextCountDirection =
-        WOTimerProgressTextCountDirection.countDown,
-    this.progressIndicatorDirection =
-        WOTimerProgressIndicatorDirection.clockwise,
+    this.progressTextCountDirection = WOTimerProgressTextCountDirection.countDown,
+    this.progressIndicatorDirection = WOTimerProgressIndicatorDirection.clockwise,
     this.backgroundColor = Colors.grey,
     this.progressIndicatorColor = Colors.green,
     this.startAngle = math.pi * 1.5,
@@ -72,8 +70,7 @@ class CustomWorkOutTimer extends StatefulWidget {
   }
 }
 
-class TimerState extends State<CustomWorkOutTimer>
-    with SingleTickerProviderStateMixin {
+class TimerState extends State<CustomWorkOutTimer> with SingleTickerProviderStateMixin {
   late WorkOutTimer controller;
 
   bool _useLocalController = false;
@@ -116,10 +113,8 @@ class TimerState extends State<CustomWorkOutTimer>
                               painter: TimerPainter(
                                   animation: controller,
                                   timerStyle: widget.timerStyle,
-                                  progressIndicatorDirection:
-                                      widget.progressIndicatorDirection,
-                                  progressIndicatorColor:
-                                      widget.progressIndicatorColor,
+                                  progressIndicatorDirection: widget.progressIndicatorDirection,
+                                  progressIndicatorColor: widget.progressIndicatorColor,
                                   backgroundColor: widget.backgroundColor,
                                   startAngle: widget.startAngle,
                                   strokeWidth: widget.strokeWidth),
@@ -142,9 +137,7 @@ class TimerState extends State<CustomWorkOutTimer>
                                       children: [
                                         widget.child ?? Container(),
                                         Text(
-                                          getProgressText() == '0'
-                                              ? '60'
-                                              : getProgressText(),
+                                          getProgressText() == '0' ? '60' : getProgressText(),
                                           style: getProgressTextStyle(),
                                         ),
                                       ],
@@ -160,25 +153,21 @@ class TimerState extends State<CustomWorkOutTimer>
   }
 
   TextStyle getProgressTextStyle() {
-    return TextStyle(fontSize: Theme.of(context).textTheme.headlineLarge!.fontSize)
-        .merge(widget.progressTextStyle);
+    return TextStyle(fontSize: Theme.of(context).textTheme.headlineLarge!.fontSize).merge(widget.progressTextStyle);
   }
 
   @override
   void didUpdateWidget(CustomWorkOutTimer oldWidget) {
     if (_useLocalController) {
-      if (widget.status == WOTimerStatus.start &&
-          oldWidget.status != WOTimerStatus.start) {
+      if (widget.status == WOTimerStatus.start && oldWidget.status != WOTimerStatus.start) {
         if (controller.isDismissed) {
           _startTimer();
         } else {
           _startTimer(false);
         }
-      } else if (widget.status == WOTimerStatus.pause &&
-          oldWidget.status != WOTimerStatus.pause) {
+      } else if (widget.status == WOTimerStatus.pause && oldWidget.status != WOTimerStatus.pause) {
         controller.pause();
-      } else if (widget.status == WOTimerStatus.reset &&
-          oldWidget.status != WOTimerStatus.reset) {
+      } else if (widget.status == WOTimerStatus.reset && oldWidget.status != WOTimerStatus.reset) {
         controller.reset();
       }
     }
@@ -217,14 +206,10 @@ class TimerState extends State<CustomWorkOutTimer>
 
   String getProgressText() {
     Duration duration = controller.duration! * controller.value;
-    if (widget.progressTextCountDirection ==
-        WOTimerProgressTextCountDirection.countDown) {
-      duration = Duration(
-          seconds: controller.duration!.inSeconds - duration.inSeconds);
-    } else if (widget.progressTextCountDirection ==
-        WOTimerProgressTextCountDirection.singleCount) {
-      duration = Duration(
-          seconds: controller.duration!.inSeconds - duration.inSeconds);
+    if (widget.progressTextCountDirection == WOTimerProgressTextCountDirection.countDown) {
+      duration = Duration(seconds: controller.duration!.inSeconds - duration.inSeconds);
+    } else if (widget.progressTextCountDirection == WOTimerProgressTextCountDirection.singleCount) {
+      duration = Duration(seconds: controller.duration!.inSeconds - duration.inSeconds);
       return "${(duration.inSeconds % 60)}";
     }
     if (widget.progressTextFormatter == null) {
@@ -255,8 +240,7 @@ class TimerPainter extends CustomPainter {
 
   TimerPainter(
       {required this.animation,
-      this.progressIndicatorDirection =
-          WOTimerProgressIndicatorDirection.clockwise,
+      this.progressIndicatorDirection = WOTimerProgressIndicatorDirection.clockwise,
       this.progressIndicatorColor = Colors.green,
       this.backgroundColor = Colors.grey,
       this.timerStyle = WOTimerStyle.ring,
@@ -293,8 +277,7 @@ class TimerPainter extends CustomPainter {
       return progress;
     }
     progress = animation.value * progress;
-    if (progressIndicatorDirection ==
-        WOTimerProgressIndicatorDirection.counterClockwise) {
+    if (progressIndicatorDirection == WOTimerProgressIndicatorDirection.counterClockwise) {
       progress = -progress;
     }
     return progress;
@@ -329,11 +312,9 @@ class TimerPainter extends CustomPainter {
 
     canvas.drawCircle(center, radius, paint);
 
-    Rect rect =
-        Rect.fromCircle(center: center, radius: getProgressRadius(radius));
+    Rect rect = Rect.fromCircle(center: center, radius: getProgressRadius(radius));
     paint.color = progressIndicatorColor;
-    canvas.drawArc(rect, getStartAngle(), getProgressSweepAngle(),
-        shouldUseCircleCenter(), paint);
+    canvas.drawArc(rect, getStartAngle(), getProgressSweepAngle(), shouldUseCircleCenter(), paint);
 
     // For showing the point moving on the circle
     double progress = animation.value * 2 * -math.pi;
@@ -373,12 +354,8 @@ class WorkOutTimer extends AnimationController {
   }
 
   double? _calculateStartValue(Duration? startDuration) {
-    startDuration = (startDuration != null && (startDuration > duration!))
-        ? duration
-        : startDuration;
-    return startDuration == null
-        ? null
-        : (1 - (startDuration.inMilliseconds / duration!.inMilliseconds));
+    startDuration = (startDuration != null && (startDuration > duration!)) ? duration : startDuration;
+    return startDuration == null ? null : (1 - (startDuration.inMilliseconds / duration!.inMilliseconds));
   }
 
   void start({bool useDelay = true, Duration? startFrom}) {
@@ -407,12 +384,9 @@ class WorkOutTimer extends AnimationController {
     start(startFrom: startFrom);
   }
 
-  void add(Duration duration,
-      {bool start = false,
-      Duration changeAnimationDuration = const Duration(seconds: 0)}) {
+  void add(Duration duration, {bool start = false, Duration changeAnimationDuration = const Duration(seconds: 0)}) {
     duration = (duration > this.duration!) ? this.duration! : duration;
-    double newValue =
-        value - (duration.inMilliseconds / this.duration!.inMilliseconds);
+    double newValue = value - (duration.inMilliseconds / this.duration!.inMilliseconds);
     animateBack(newValue, duration: changeAnimationDuration);
     if (start) {
       forward();
@@ -420,11 +394,9 @@ class WorkOutTimer extends AnimationController {
   }
 
   void subtract(Duration duration,
-      {bool start = false,
-      Duration changeAnimationDuration = const Duration(seconds: 0)}) {
+      {bool start = false, Duration changeAnimationDuration = const Duration(seconds: 0)}) {
     duration = (duration > this.duration!) ? this.duration! : duration;
-    double newValue =
-        value + (duration.inMilliseconds / this.duration!.inMilliseconds);
+    double newValue = value + (duration.inMilliseconds / this.duration!.inMilliseconds);
     animateTo(newValue, duration: changeAnimationDuration);
     if (start) {
       forward();
