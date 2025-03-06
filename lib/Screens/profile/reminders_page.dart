@@ -384,7 +384,7 @@ Future<void> scheduleNotification(int id, tz.TZDateTime time) async {
     channelDescription: 'Reminders for exercise routines',
     importance: Importance.max,
     priority: Priority.high,
-    sound: const RawResourceAndroidNotificationSound('iphone_15_original'),
+    sound: const RawResourceAndroidNotificationSound('ringtone'),
     playSound: true,
     enableVibration: true,
     fullScreenIntent: true,
