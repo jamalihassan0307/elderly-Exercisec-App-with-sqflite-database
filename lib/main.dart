@@ -26,7 +26,7 @@ void main() async {
       // Handle notification tap
       if (response.payload != null) {
         // Navigate to exercise page
-        navigatorKey.currentState?.pushNamed('/exercise');
+        navigatorKey.currentState?.pushNamed('/ViewAllExercisePage');
       }
     },
     onDidReceiveBackgroundNotificationResponse: notificationTapBackground,
