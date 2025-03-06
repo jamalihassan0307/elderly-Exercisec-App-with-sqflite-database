@@ -112,64 +112,139 @@ class _SnoozePageState extends State<SnoozePage> with SingleTickerProviderStateM
     return WillPopScope(
       onWillPop: () async => false,
       child: Scaffold(
-        backgroundColor: Colors.black.withOpacity(0.95),
+        backgroundColor: const Color(0xFF1A237E),
         body: AnimatedBuilder(
           animation: _animationController,
           builder: (context, child) {
             return FadeTransition(
               opacity: _fadeAnimation,
-              child: Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    ScaleTransition(
-                      scale: _scaleAnimation,
-                      child: Container(
-                        padding: EdgeInsets.all(4 * SizeConfig.height!),
-                        decoration: BoxDecoration(
-                          color: blue.withOpacity(0.1),
-                          shape: BoxShape.circle,
-                        ),
-                        child: Icon(
-                          Icons.alarm,
-                          size: 15 * SizeConfig.height!,
-                          color: blue,
-                        ),
-                      ),
-                    ),
-                    SizedBox(height: 3 * SizeConfig.height!),
-                    Text(
-                      _timeDisplay,
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 8 * SizeConfig.text!,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    SizedBox(height: 5 * SizeConfig.height!),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        _buildActionButton(
-                          icon: Icons.close,
-                          label: 'Dismiss',
-                          color: Colors.red,
-                          onTap: _handleDismiss,
-                        ),
-                        _buildActionButton(
-                          icon: Icons.snooze,
-                          label: 'Snooze',
-                          color: blue,
-                          onTap: _handleSnooze,
-                        ),
-                      ],
-                    ),
-                  ],
+              child: Container(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: [
+                      const Color(0xFF1A237E),
+                      const Color(0xFF303F9F),
+                    ],
+                  ),
+                ),
+                child: SafeArea(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      _buildHeader(),
+                      _buildAlarmContent(),
+                      _buildActionButtons(),
+                    ],
+                  ),
                 ),
               ),
             );
           },
         ),
+      ),
+    );
+  }
+
+  Widget _buildHeader() {
+    return Padding(
+      padding: EdgeInsets.all(3 * SizeConfig.height!),
+      child: Text(
+        'Exercise Reminder',
+        style: TextStyle(
+          color: Colors.white,
+          fontSize: 3 * SizeConfig.text!,
+          fontWeight: FontWeight.bold,
+          letterSpacing: 1,
+        ),
+      ),
+    );
+  }
+
+  Widget _buildAlarmContent() {
+    return ScaleTransition(
+      scale: _scaleAnimation,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          _buildAlarmIcon(),
+          SizedBox(height: 4 * SizeConfig.height!),
+          _buildTimer(),
+          SizedBox(height: 2 * SizeConfig.height!),
+          Text(
+            'Time to exercise!',
+            style: TextStyle(
+              color: Colors.white70,
+              fontSize: 2.4 * SizeConfig.text!,
+              letterSpacing: 0.5,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildAlarmIcon() {
+    return Container(
+      padding: EdgeInsets.all(4 * SizeConfig.height!),
+      decoration: BoxDecoration(
+        color: Colors.white.withOpacity(0.1),
+        shape: BoxShape.circle,
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.2),
+            blurRadius: 20,
+            spreadRadius: 5,
+          ),
+        ],
+      ),
+      child: Container(
+        padding: EdgeInsets.all(3 * SizeConfig.height!),
+        decoration: BoxDecoration(
+          color: Colors.white.withOpacity(0.15),
+          shape: BoxShape.circle,
+        ),
+        child: Icon(
+          Icons.fitness_center_rounded,
+          size: 12 * SizeConfig.height!,
+          color: Colors.white,
+        ),
+      ),
+    );
+  }
+
+  Widget _buildTimer() {
+    return Text(
+      _timeDisplay,
+      style: TextStyle(
+        color: Colors.white,
+        fontSize: 10 * SizeConfig.text!,
+        fontWeight: FontWeight.bold,
+        letterSpacing: 2,
+      ),
+    );
+  }
+
+  Widget _buildActionButtons() {
+    return Padding(
+      padding: EdgeInsets.all(4 * SizeConfig.height!),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          _buildActionButton(
+            icon: Icons.close_rounded,
+            label: 'Dismiss',
+            color: Colors.redAccent,
+            onTap: _handleDismiss,
+          ),
+          _buildActionButton(
+            icon: Icons.snooze_rounded,
+            label: 'Snooze',
+            color: Colors.white,
+            onTap: _handleSnooze,
+          ),
+        ],
       ),
     );
   }
@@ -183,24 +258,35 @@ class _SnoozePageState extends State<SnoozePage> with SingleTickerProviderStateM
     return GestureDetector(
       onTap: onTap,
       child: Container(
+        width: 18 * SizeConfig.width!,
         padding: EdgeInsets.symmetric(
-          horizontal: 5 * SizeConfig.width!,
           vertical: 2 * SizeConfig.height!,
+          horizontal: 2 * SizeConfig.width!,
         ),
         decoration: BoxDecoration(
-          color: color.withOpacity(0.1),
-          borderRadius: BorderRadius.circular(2 * SizeConfig.height!),
+          color: color.withOpacity(0.15),
+          borderRadius: BorderRadius.circular(3 * SizeConfig.height!),
+          border: Border.all(
+            color: color.withOpacity(0.3),
+            width: 1,
+          ),
         ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(icon, color: color, size: 4 * SizeConfig.height!),
-            SizedBox(height: 1 * SizeConfig.height!),
+            Icon(
+              icon,
+              color: color,
+              size: 4 * SizeConfig.height!,
+            ),
+            SizedBox(height: SizeConfig.height!),
             Text(
               label,
               style: TextStyle(
                 color: color,
-                fontSize: 2 * SizeConfig.text!,
+                fontSize: 1.8 * SizeConfig.text!,
+                fontWeight: FontWeight.w600,
+                letterSpacing: 0.5,
               ),
             ),
           ],

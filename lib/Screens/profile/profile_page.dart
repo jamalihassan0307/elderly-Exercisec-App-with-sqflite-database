@@ -112,294 +112,20 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: white,
-        elevation: 0,
-        centerTitle: true,
-        title: Text(
-          'My Profile',
-          style: TextStyle(
-            color: black.withOpacity(0.7),
-            fontSize: 3 * SizeConfig.text!,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-      ),
+      appBar: _buildAppBar(),
       body: CustomPicker(
         child: SingleChildScrollView(
+          physics: const BouncingScrollPhysics(),
           child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 1.2 * SizeConfig.height!),
+            padding: EdgeInsets.all(2 * SizeConfig.height!),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                settingsTile(
-                  'Name',
-                  'name',
-                  userName.isNotEmpty ? userName : '0.0',
-                  () {
-                    showDialog(
-                        context: context,
-                        builder: (builder) {
-                          return NamePicker(
-                            getName: (p0) {
-                              setState(() => userName = p0);
-
-                              ExerciseDatabase.instance.updateUser('name', userName);
-                              getUser();
-                            },
-                            name: userName,
-                          );
-                        });
-                    getUser();
-                  },
-                ),
-                settingsTile(
-                  'Gender',
-                  'gender',
-                  userGender.isNotEmpty ? userGender : '0.0',
-                  () {
-                    showDialog(
-                        context: context,
-                        builder: (builder) {
-                          return GenderPicker(
-                            gender: (p0) {
-                              setState(() => userGender = p0);
-                              ExerciseDatabase.instance.updateUser('gender', p0);
-                              getUser();
-                            },
-                          );
-                        });
-                  },
-                ),
-                settingsTile(
-                  'Height',
-                  'height',
-                  userHeight.isNotEmpty ? '$userHeight cm' : '0.0',
-                  () {
-                    showDialog(
-                        context: context,
-                        builder: (builder) {
-                          return HeightPicker(
-                            height: (p0) {
-                              setState(() => userHeight = p0);
-                              ExerciseDatabase.instance.updateUser('height', p0);
-                              getUser();
-                            },
-                            initialValue: userHeight,
-                          );
-                        });
-                  },
-                ),
-                settingsTile(
-                  'Weight',
-                  'weight',
-                  userweight.isNotEmpty ? '$userweight kg' : '0.0',
-                  () {
-                    showDialog(
-                        context: context,
-                        builder: (builder) {
-                          return WeightPicker(
-                            weight: (p0) {
-                              setState(() => userweight = p0);
-                              ExerciseDatabase.instance.updateUser('weight', p0);
-                              getUser();
-                            },
-                          );
-                        });
-                  },
-                ),
-                settingsTile(
-                  'Date of birth',
-                  'birthday',
-                  userDob.isNotEmpty ? userDob : '0.0',
-                  () {
-                    showDialog(
-                        context: context,
-                        builder: (builder) {
-                          return DOBPicker(
-                            dob: (p0) {
-                              setState(() => userDob = p0);
-                              ExerciseDatabase.instance.updateUser('birth', p0);
-                              getUser();
-                            },
-                          );
-                        });
-                  },
-                ),
-                Padding(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: 9 * SizeConfig.height!,
-                    vertical: 2.5 * SizeConfig.height!,
-                  ),
-                  child: CustomRoundBtn(
-                    onTap: () {
-                      if (userHeight.isNotEmpty || userweight.isNotEmpty) {
-                        var values =
-                            (double.parse(userweight) / (double.parse(userHeight) * double.parse(userHeight))) * 10000;
-
-                        bmiValue = double.parse(values.toStringAsFixed(1));
-                        bmiCalculation(bmiValue);
-                        ExerciseDatabase.instance.updateUser('bmi', bmiValue.toString());
-                        getUser();
-                      } else {
-                        showDialog(
-                            context: context,
-                            builder: (context) {
-                              return const WarningDialogBox(
-                                title:
-                                    'Please enter your weight and height it must necessarily be used for calculating.',
-                              );
-                            });
-                      }
-                    },
-                    text: 'Calculate',
-                  ),
-                ),
-                h10,
-                Text(
-                  'BMI(kg/m2)',
-                  style: TextStyle(
-                    color: black.withOpacity(0.7),
-                    fontSize: 2.5 * SizeConfig.text!,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-                h10,
-                SizedBox(
-                  height: 20 * SizeConfig.height!,
-                  child: Stack(
-                    children: [
-                      Container(
-                        height: 10 * SizeConfig.height!,
-                        margin: EdgeInsets.only(top: 2.5 * SizeConfig.height!),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            colorTag(
-                              color: const Color(0xFFB2D1CF),
-                              width: 4.2 * SizeConfig.width!,
-                              value: '15',
-                            ),
-                            w2,
-                            colorTag(
-                              color: const Color(0xFF4C6C93),
-                              width: 8 * SizeConfig.width!,
-                              value: '16',
-                            ),
-                            w2,
-                            colorTag(
-                              color: const Color(0xFF74DD78),
-                              width: 31 * SizeConfig.width!,
-                              value: '18.5',
-                            ),
-                            w2,
-                            colorTag(
-                              color: const Color(0xFFDCE683),
-                              width: 16 * SizeConfig.width!,
-                              value: '25',
-                            ),
-                            w2,
-                            colorTag(
-                              color: const Color(0xFFFEB447),
-                              width: 16 * SizeConfig.width!,
-                              value: '30',
-                            ),
-                            w2,
-                            colorTag(
-                                color: const Color(0xFFEA4450),
-                                width: 16 * SizeConfig.width!,
-                                value: '35',
-                                value2: '40'),
-                          ],
-                        ),
-                      ),
-                      bmiValue != 0.0
-                          ? Positioned(
-                              top: 0,
-                              left: level > 37 ? level - 4 * SizeConfig.width! : level,
-                              child: Text(
-                                bmiValue.toString(),
-                                style: TextStyle(
-                                  color: black.withOpacity(0.6),
-                                  fontSize: 1.7 * SizeConfig.text!,
-                                  fontWeight: FontWeight.w600,
-                                ),
-                              ),
-                            )
-                          : const SizedBox(),
-                      Positioned(
-                        top: 1.8 * SizeConfig.height!,
-                        left: bmiValue != 0.0 ? level : 0.5 * SizeConfig.width!,
-                        child: Container(
-                          width: 2.0,
-                          color: black,
-                          height: 6.2 * SizeConfig.height!,
-                        ),
-                      ),
-                      Align(
-                        alignment: Alignment.bottomCenter,
-                        child: Text(
-                          bmiData,
-                          style: TextStyle(
-                            color: black.withOpacity(0.7),
-                            letterSpacing: 0.3,
-                            fontSize: 2.5 * SizeConfig.text!,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                      )
-                    ],
-                  ),
-                ),
-                const Divider(thickness: 2),
-                h10,
-                Text(
-                  'Settings',
-                  style: TextStyle(
-                    color: black.withOpacity(0.7),
-                    fontSize: 2.5 * SizeConfig.text!,
-                    letterSpacing: 0.5,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
+                _buildProfileHeader(),
                 h20,
-                reminderButton(
-                  name: 'Reminder',
-                  imagePath: 'notification.PNG',
-                  description: 'setup reminders to exercise.',
-                  onTap: () {
-                    Navigator.of(context).pushNamed('/RemindersPage');
-                  },
-                ),
-                h10,
-                reminderButton(
-                  name: 'Reset',
-                  imagePath: 'reset.png',
-                  description: 'clear all user records in the app',
-                  color: red,
-                  onTap: () {
-                    showDialog(
-                        context: context,
-                        builder: (builder) {
-                          return AppDialog(
-                            title: 'Reset',
-                            subTitle: 'Are you sure you want to reset all data ?',
-                            onContinue: () {
-                              setState(() {
-                                ExerciseDatabase.instance.resetUser();
-                                ExerciseDatabase.instance.restAllData();
-                                getUser();
-                              });
-
-                              Navigator.pop(context);
-                            },
-                          );
-                        });
-                    // getUser();
-                  },
-                ),
-                h20,
+                _buildBMICard(),
+                h30,
+                _buildSettingsSection(),
               ],
             ),
           ),
@@ -408,13 +134,264 @@ class _ProfilePageState extends State<ProfilePage> {
     );
   }
 
-  Widget reminderButton({
-    required String name,
-    required Function() onTap,
-    required String imagePath,
-    Color? color,
-    String? description = '',
-  }) {
+  PreferredSizeWidget _buildAppBar() {
+    return AppBar(
+      elevation: 0,
+      backgroundColor: const Color(0xFF1A237E),
+      title: Text(
+        'My Profile',
+        style: TextStyle(
+          color: white,
+          fontSize: 2.8 * SizeConfig.text!,
+          fontWeight: FontWeight.bold,
+          letterSpacing: 0.5,
+        ),
+      ),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(
+          bottom: Radius.circular(3 * SizeConfig.height!),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildProfileHeader() {
+    return Container(
+      padding: EdgeInsets.all(2 * SizeConfig.height!),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: [const Color(0xFFE3F2FD), const Color(0xFFBBDEFB)],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+        borderRadius: BorderRadius.circular(15),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.05),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Column(
+        children: [
+          _buildProfileItem('Name', userName, 'name'),
+          _buildProfileItem('Gender', userGender, 'gender'),
+          _buildProfileItem('Height', '$userHeight cm', 'height'),
+          _buildProfileItem('Weight', '$userweight kg', 'weight'),
+          _buildProfileItem('Date of birth', userDob, 'birthday'),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildProfileItem(String label, String value, String icon) {
+    return GestureDetector(
+      onTap: () => _handleEdit(label),
+      child: Container(
+        padding: EdgeInsets.symmetric(vertical: SizeConfig.height!),
+        child: Row(
+          children: [
+            Container(
+              padding: EdgeInsets.all(1.2 * SizeConfig.height!),
+              decoration: BoxDecoration(
+                color: const Color(0xFF1A237E).withOpacity(0.1),
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Image.asset(
+                'assets/icons/$icon.png',
+                color: const Color(0xFF1A237E),
+                height: 2.5 * SizeConfig.height!,
+              ),
+            ),
+            w20,
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    label,
+                    style: TextStyle(
+                      color: const Color(0xFF1A237E).withOpacity(0.6),
+                      fontSize: 1.6 * SizeConfig.text!,
+                    ),
+                  ),
+                  Text(
+                    value.isEmpty ? 'Not set' : value,
+                    style: TextStyle(
+                      color: const Color(0xFF1A237E),
+                      fontSize: 2 * SizeConfig.text!,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            IconButton(
+              icon: Icon(
+                Icons.edit_rounded,
+                color: const Color(0xFF1A237E),
+                size: 2.2 * SizeConfig.height!,
+              ),
+              onPressed: () => _handleEdit(label.toLowerCase()),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildBMICard() {
+    return Container(
+      padding: EdgeInsets.all(2 * SizeConfig.height!),
+      decoration: BoxDecoration(
+        color: white,
+        borderRadius: BorderRadius.circular(15),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.05),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'BMI Status',
+            style: TextStyle(
+              color: const Color(0xFF1A237E),
+              fontSize: 2.2 * SizeConfig.text!,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          h20,
+          _buildBMIIndicator(),
+          h10,
+          Center(
+            child: Text(
+              bmiData,
+              style: TextStyle(
+                color: const Color(0xFF1A237E),
+                fontSize: 2 * SizeConfig.text!,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildSettingsSection() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'Settings',
+          style: TextStyle(
+            color: const Color(0xFF1A237E),
+            fontSize: 2.2 * SizeConfig.text!,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        h20,
+        _buildSettingTile(
+          'Reminders',
+          'notification.PNG',
+          'Setup reminders to exercise',
+          () => Navigator.of(context).pushNamed('/RemindersPage'),
+        ),
+        h10,
+        _buildSettingTile(
+          'Reset Data',
+          'reset.png',
+          'Clear all user records',
+          _handleReset,
+          color: Colors.red,
+        ),
+      ],
+    );
+  }
+
+  Widget _buildBMIIndicator() {
+    return SizedBox(
+      height: 20 * SizeConfig.height!,
+      child: Stack(
+        children: [
+          Container(
+            height: 10 * SizeConfig.height!,
+            margin: EdgeInsets.only(top: 2.5 * SizeConfig.height!),
+            child: SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              physics: const BouncingScrollPhysics(),
+              child: Row(
+                children: [
+                  colorTag(
+                    color: const Color(0xFFB2D1CF),
+                    width: 4.2 * SizeConfig.width!,
+                    value: '15',
+                  ),
+                  w2,
+                  colorTag(
+                    color: const Color(0xFF4C6C93),
+                    width: 8 * SizeConfig.width!,
+                    value: '16',
+                  ),
+                  w2,
+                  colorTag(
+                    color: const Color(0xFF74DD78),
+                    width: 31 * SizeConfig.width!,
+                    value: '18.5',
+                  ),
+                  w2,
+                  colorTag(
+                    color: const Color(0xFFDCE683),
+                    width: 16 * SizeConfig.width!,
+                    value: '25',
+                  ),
+                  w2,
+                  colorTag(
+                    color: const Color(0xFFFEB447),
+                    width: 16 * SizeConfig.width!,
+                    value: '30',
+                  ),
+                  w2,
+                  colorTag(color: const Color(0xFFEA4450), width: 16 * SizeConfig.width!, value: '35', value2: '40'),
+                ],
+              ),
+            ),
+          ),
+          bmiValue != 0.0
+              ? Positioned(
+                  top: 0,
+                  left: level > 37 ? level - 4 * SizeConfig.width! : level,
+                  child: Text(
+                    bmiValue.toString(),
+                    style: TextStyle(
+                      color: black.withOpacity(0.6),
+                      fontSize: 1.7 * SizeConfig.text!,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                )
+              : const SizedBox(),
+          Positioned(
+            top: 1.8 * SizeConfig.height!,
+            left: bmiValue != 0.0 ? level : 0.5 * SizeConfig.width!,
+            child: Container(
+              width: 2.0,
+              color: black,
+              height: 6.2 * SizeConfig.height!,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildSettingTile(String name, String imagePath, String description, Function() onTap, {Color? color}) {
     return GestureDetector(
       onTap: onTap,
       child: Row(
@@ -459,7 +436,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 ),
               ),
               Text(
-                description!,
+                description,
                 style: TextStyle(
                   color: black.withOpacity(0.3),
                   fontSize: 1.6 * SizeConfig.text!,
@@ -472,6 +449,97 @@ class _ProfilePageState extends State<ProfilePage> {
         ],
       ),
     );
+  }
+
+  void _handleEdit(String label) {
+    switch (label.toLowerCase()) {
+      case 'name':
+        showDialog(
+          context: context,
+          builder: (_) => NamePicker(
+            getName: (name) => setState(() {
+              userName = name;
+              ExerciseDatabase.instance.updateUser('name', name);
+              getUser();
+            }),
+            name: userName,
+          ),
+        );
+        break;
+
+      case 'gender':
+        showDialog(
+          context: context,
+          builder: (_) => GenderPicker(
+            gender: (gender) => setState(() {
+              userGender = gender;
+              ExerciseDatabase.instance.updateUser('gender', gender);
+              getUser();
+            }),
+          ),
+        );
+        break;
+
+      case 'height':
+        showDialog(
+          context: context,
+          builder: (_) => HeightPicker(
+            height: (height) => setState(() {
+              userHeight = height;
+              ExerciseDatabase.instance.updateUser('height', height);
+              getUser();
+            }),
+            initialValue: userHeight,
+          ),
+        );
+        break;
+
+      case 'weight':
+        showDialog(
+          context: context,
+          builder: (_) => WeightPicker(
+            weight: (weight) => setState(() {
+              userweight = weight;
+              ExerciseDatabase.instance.updateUser('weight', weight);
+              getUser();
+            }),
+          ),
+        );
+        break;
+
+      case 'date of birth':
+        showDialog(
+          context: context,
+          builder: (_) => DOBPicker(
+            dob: (dob) => setState(() {
+              userDob = dob;
+              ExerciseDatabase.instance.updateUser('birth', dob);
+              getUser();
+            }),
+          ),
+        );
+        break;
+    }
+  }
+
+  void _handleReset() {
+    showDialog(
+        context: context,
+        builder: (builder) {
+          return AppDialog(
+            title: 'Reset',
+            subTitle: 'Are you sure you want to reset all data ?',
+            onContinue: () {
+              setState(() {
+                ExerciseDatabase.instance.resetUser();
+                ExerciseDatabase.instance.restAllData();
+                getUser();
+              });
+
+              Navigator.pop(context);
+            },
+          );
+        });
   }
 
   Widget colorTag({
@@ -513,63 +581,6 @@ class _ProfilePageState extends State<ProfilePage> {
                   : const SizedBox()
             ],
           )
-        ],
-      ),
-    );
-  }
-
-  Container settingsTile(String name, String imagePath, String value, Function() onTap) {
-    return Container(
-      height: 5.2 * SizeConfig.height!,
-      padding: EdgeInsets.only(right: 4 * SizeConfig.width!),
-      margin: EdgeInsets.only(bottom: 0.5 * SizeConfig.height!),
-      decoration: BoxDecoration(
-        color: grey.withOpacity(0.03),
-        borderRadius: BorderRadius.circular(10.0),
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Row(
-            children: [
-              Image.asset(
-                'assets/icons/$imagePath.png',
-                color: grey,
-                height: 3.4 * SizeConfig.height!,
-              ),
-              w10,
-              Text(
-                name,
-                style: TextStyle(
-                  color: grey,
-                  letterSpacing: 0.2,
-                  fontSize: 2 * SizeConfig.text!,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-            ],
-          ),
-          value != '0.0'
-              ? GestureDetector(
-                  onTap: onTap,
-                  child: Text(
-                    value,
-                    style: TextStyle(
-                      color: blue,
-                      letterSpacing: 0.3,
-                      fontSize: 2 * SizeConfig.text!,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                )
-              : GestureDetector(
-                  onTap: onTap,
-                  child: Image.asset(
-                    'assets/icons/add.png',
-                    color: grey,
-                    height: 3.5 * SizeConfig.height!,
-                  ),
-                ),
         ],
       ),
     );
