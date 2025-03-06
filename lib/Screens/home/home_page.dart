@@ -21,7 +21,7 @@ class _HomePageState extends State<HomePage> {
         appBar: PreferredSize(
           preferredSize: Size.fromHeight(18 * SizeConfig.height!),
           child: Container(
-            height: 10 * SizeConfig.height!,
+            height: 15 * SizeConfig.height!,
             padding: EdgeInsets.only(
               top: 2 * SizeConfig.height!,
               right: 1.5 * SizeConfig.height!,
@@ -50,7 +50,7 @@ class _HomePageState extends State<HomePage> {
             ),
           ),
         ),
-        body: Padding(
+        body: SingleChildScrollView(
           padding: EdgeInsets.only(
             left: 1.5 * SizeConfig.height!,
             bottom: 3 * SizeConfig.height!,

@@ -145,8 +145,7 @@ class _ProfilePageState extends State<ProfilePage> {
                             getName: (p0) {
                               setState(() => userName = p0);
 
-                              ExerciseDatabase.instance
-                                  .updateUser('name', userName);
+                              ExerciseDatabase.instance.updateUser('name', userName);
                               getUser();
                             },
                             name: userName,
@@ -166,8 +165,7 @@ class _ProfilePageState extends State<ProfilePage> {
                           return GenderPicker(
                             gender: (p0) {
                               setState(() => userGender = p0);
-                              ExerciseDatabase.instance
-                                  .updateUser('gender', p0);
+                              ExerciseDatabase.instance.updateUser('gender', p0);
                               getUser();
                             },
                           );
@@ -185,8 +183,7 @@ class _ProfilePageState extends State<ProfilePage> {
                           return HeightPicker(
                             height: (p0) {
                               setState(() => userHeight = p0);
-                              ExerciseDatabase.instance
-                                  .updateUser('height', p0);
+                              ExerciseDatabase.instance.updateUser('height', p0);
                               getUser();
                             },
                             initialValue: userHeight,
@@ -205,8 +202,7 @@ class _ProfilePageState extends State<ProfilePage> {
                           return WeightPicker(
                             weight: (p0) {
                               setState(() => userweight = p0);
-                              ExerciseDatabase.instance
-                                  .updateUser('weight', p0);
+                              ExerciseDatabase.instance.updateUser('weight', p0);
                               getUser();
                             },
                           );
@@ -239,15 +235,12 @@ class _ProfilePageState extends State<ProfilePage> {
                   child: CustomRoundBtn(
                     onTap: () {
                       if (userHeight.isNotEmpty || userweight.isNotEmpty) {
-                        var values = (double.parse(userweight) /
-                                (double.parse(userHeight) *
-                                    double.parse(userHeight))) *
-                            10000;
+                        var values =
+                            (double.parse(userweight) / (double.parse(userHeight) * double.parse(userHeight))) * 10000;
 
                         bmiValue = double.parse(values.toStringAsFixed(1));
                         bmiCalculation(bmiValue);
-                        ExerciseDatabase.instance
-                            .updateUser('bmi', bmiValue.toString());
+                        ExerciseDatabase.instance.updateUser('bmi', bmiValue.toString());
                         getUser();
                       } else {
                         showDialog(
@@ -274,11 +267,11 @@ class _ProfilePageState extends State<ProfilePage> {
                 ),
                 h10,
                 SizedBox(
-                  height: 16 * SizeConfig.height!,
+                  height: 20 * SizeConfig.height!,
                   child: Stack(
                     children: [
                       Container(
-                        height: 7 * SizeConfig.height!,
+                        height: 10 * SizeConfig.height!,
                         margin: EdgeInsets.only(top: 2.5 * SizeConfig.height!),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
@@ -324,9 +317,7 @@ class _ProfilePageState extends State<ProfilePage> {
                       bmiValue != 0.0
                           ? Positioned(
                               top: 0,
-                              left: level > 37
-                                  ? level - 4 * SizeConfig.width!
-                                  : level,
+                              left: level > 37 ? level - 4 * SizeConfig.width! : level,
                               child: Text(
                                 bmiValue.toString(),
                                 style: TextStyle(
@@ -393,8 +384,7 @@ class _ProfilePageState extends State<ProfilePage> {
                         builder: (builder) {
                           return AppDialog(
                             title: 'Reset',
-                            subTitle:
-                                'Are you sure you want to reset all data ?',
+                            subTitle: 'Are you sure you want to reset all data ?',
                             onContinue: () {
                               setState(() {
                                 ExerciseDatabase.instance.resetUser();
@@ -528,8 +518,7 @@ class _ProfilePageState extends State<ProfilePage> {
     );
   }
 
-  Container settingsTile(
-      String name, String imagePath, String value, Function() onTap) {
+  Container settingsTile(String name, String imagePath, String value, Function() onTap) {
     return Container(
       height: 5.2 * SizeConfig.height!,
       padding: EdgeInsets.only(right: 4 * SizeConfig.width!),

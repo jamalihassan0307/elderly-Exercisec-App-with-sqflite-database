@@ -49,8 +49,8 @@ class _BottomNavBarState extends State<BottomNavBar> {
       ),
       bottomNavigationBar: BottomAppBar(
         child: Container(
-          height: 8 * SizeConfig.height!,
-          padding: EdgeInsets.symmetric(vertical: 1 * SizeConfig.height!),
+          height: 9 * SizeConfig.height!,
+          // padding: EdgeInsets.symmetric(vertical: 1 * SizeConfig.height!),
           decoration: BoxDecoration(
             color: white,
             boxShadow: [
@@ -77,9 +77,7 @@ class _BottomNavBarState extends State<BottomNavBar> {
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
                       Image.asset(
-                        selectBtn == i
-                            ? navButtons[i].selectImage
-                            : navButtons[i].unselectImage,
+                        selectBtn == i ? navButtons[i].selectImage : navButtons[i].unselectImage,
                         height: 3.3 * SizeConfig.height!,
                         color: selectBtn == i ? blue : darkGrey,
                       ),

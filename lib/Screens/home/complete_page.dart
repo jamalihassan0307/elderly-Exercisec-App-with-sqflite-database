@@ -47,110 +47,110 @@ class CompletePage extends StatelessWidget {
             },
             imagePath: 'back.png',
           ),
-          Container(
-            height: height,
-            width: double.infinity,
-            margin: EdgeInsets.only(top: height / 3.2),
-            padding: EdgeInsets.symmetric(
-              vertical: 2.5 * SizeConfig.height!,
-              horizontal: 2.5 * SizeConfig.height!,
-            ),
-            decoration: BoxDecoration(
-              color: white,
-              borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(5 * SizeConfig.height!),
-                topRight: Radius.circular(5 * SizeConfig.height!),
+          SingleChildScrollView(
+            child: Container(
+              height: height,
+              width: double.infinity,
+              margin: EdgeInsets.only(top: height / 3.2),
+              padding: EdgeInsets.symmetric(
+                vertical: 2.5 * SizeConfig.height!,
+                horizontal: 2.5 * SizeConfig.height!,
               ),
-            ),
-            child: Column(
-              // crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Well Done, You\'ve completed this workout!',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    color: Colors.black87,
-                    fontSize: 3 * SizeConfig.text!,
-                    letterSpacing: 0.7,
-                    fontWeight: FontWeight.w600,
+              decoration: BoxDecoration(
+                color: white,
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(5 * SizeConfig.height!),
+                  topRight: Radius.circular(5 * SizeConfig.height!),
+                ),
+              ),
+              child: Column(
+                children: [
+                  Text(
+                    'Well Done, You\'ve completed this workout!',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: Colors.black87,
+                      fontSize: 3 * SizeConfig.text!,
+                      letterSpacing: 0.7,
+                      fontWeight: FontWeight.w600,
+                    ),
                   ),
-                ),
-                h10,
-                Image.asset('assets/icons/trophy.PNG',
-                    height: 23 * SizeConfig.height!),
-                h10,
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    Column(
-                      children: [
-                        CircleAvatar(
-                          radius: 3.5 * SizeConfig.height!,
-                          backgroundColor: blue,
-                          child: Text(
-                            arg.event.kcal,
+                  h10,
+                  Image.asset('assets/icons/trophy.PNG', height: 23 * SizeConfig.height!),
+                  h10,
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      Column(
+                        children: [
+                          CircleAvatar(
+                            radius: 3.5 * SizeConfig.height!,
+                            backgroundColor: blue,
+                            child: Text(
+                              arg.event.kcal,
+                              style: TextStyle(
+                                color: white,
+                                fontSize: 2.5 * SizeConfig.text!,
+                                letterSpacing: 0.7,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          ),
+                          h10,
+                          Text(
+                            'Calories Burned',
                             style: TextStyle(
-                              color: white,
-                              fontSize: 2.5 * SizeConfig.text!,
+                              color: black,
+                              fontSize: 2.2 * SizeConfig.text!,
                               letterSpacing: 0.7,
                               fontWeight: FontWeight.w600,
                             ),
                           ),
-                        ),
-                        h10,
-                        Text(
-                          'Calories Burned',
-                          style: TextStyle(
-                            color: black,
-                            fontSize: 2.2 * SizeConfig.text!,
-                            letterSpacing: 0.7,
-                            fontWeight: FontWeight.w600,
+                        ],
+                      ),
+                      w30,
+                      Column(
+                        children: [
+                          CircleAvatar(
+                            radius: 3.5 * SizeConfig.height!,
+                            backgroundColor: blue,
+                            child: Text(
+                              timeTo,
+                              style: TextStyle(
+                                color: white,
+                                fontSize: 2.5 * SizeConfig.text!,
+                                letterSpacing: 0.7,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
                           ),
-                        ),
-                      ],
-                    ),
-                    w30,
-                    Column(
-                      children: [
-                        CircleAvatar(
-                          radius: 3.5 * SizeConfig.height!,
-                          backgroundColor: blue,
-                          child: Text(
-                            timeTo,
+                          h10,
+                          Text(
+                            time,
                             style: TextStyle(
-                              color: white,
-                              fontSize: 2.5 * SizeConfig.text!,
+                              color: black,
+                              fontSize: 2.2 * SizeConfig.text!,
                               letterSpacing: 0.7,
                               fontWeight: FontWeight.w600,
                             ),
                           ),
-                        ),
-                        h10,
-                        Text(
-                          time,
-                          style: TextStyle(
-                            color: black,
-                            fontSize: 2.2 * SizeConfig.text!,
-                            letterSpacing: 0.7,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-                h30,
-                CustomRoundBtn(
-                    onTap: () {
-                      Navigator.of(context).pushNamedAndRemoveUntil(
-                        '/BottomNavBar',
-                        (route) => false,
-                        arguments: ScreenArguments(0, false),
-                      );
-                    },
-                    text: 'Complete'),
-                h10,
-              ],
+                        ],
+                      ),
+                    ],
+                  ),
+                  h30,
+                  CustomRoundBtn(
+                      onTap: () {
+                        Navigator.of(context).pushNamedAndRemoveUntil(
+                          '/BottomNavBar',
+                          (route) => false,
+                          arguments: ScreenArguments(0, false),
+                        );
+                      },
+                      text: 'Complete'),
+                  h10,
+                ],
+              ),
             ),
           )
         ]),
