@@ -79,13 +79,12 @@ class TimerState extends State<CustomWorkOutTimer> with SingleTickerProviderStat
   @override
   void initState() {
     if (widget.controller == null) {
-      controller = WorkOutTimer(this);
+      controller = WorkOutTimer(this, delay: widget.delay);
       _useLocalController = true;
     } else {
       controller = widget.controller!;
     }
     controller.duration = widget.duration;
-    controller._setDelay(widget.delay);
     controller.addListener(_animationValueListener);
     controller.addStatusListener(_animationStatusListener);
     if (_useLocalController && (widget.status == WOTimerStatus.start)) {
@@ -341,32 +340,36 @@ class TimerPainter extends CustomPainter {
 }
 
 class WorkOutTimer extends AnimationController {
+  final TickerProvider vsync;
+  final Duration? delay;
   bool _wasActive = false;
 
-  Duration? _delay;
+  WorkOutTimer(this.vsync, {this.delay, Duration? duration})
+      : super(
+          vsync: vsync,
+          duration: duration ?? const Duration(seconds: 60),
+        );
 
-  WorkOutTimer(TickerProvider vsync) : super(vsync: vsync);
-
-  Duration? get delay => _delay;
-
-  void _setDelay(Duration delay) {
-    _delay = delay;
-  }
-
-  double? _calculateStartValue(Duration? startDuration) {
-    startDuration = (startDuration != null && (startDuration > duration!)) ? duration : startDuration;
-    return startDuration == null ? null : (1 - (startDuration.inMilliseconds / duration!.inMilliseconds));
-  }
-
+  @override
   void start({bool useDelay = true, Duration? startFrom}) {
-    if (useDelay && !_wasActive && (_delay != null)) {
+    if (useDelay && !_wasActive && (delay != null)) {
       _wasActive = true;
-      Future.delayed(_delay!, () {
+      Future.delayed(delay!, () {
         forward(from: _calculateStartValue(startFrom));
       });
     } else {
       forward(from: _calculateStartValue(startFrom));
     }
+  }
+
+  double _calculateStartValue(Duration? startFrom) {
+    if (startFrom == null) return 0.0;
+    return startFrom.inMilliseconds / duration!.inMilliseconds;
+  }
+
+  void restart() {
+    reset();
+    start();
   }
 
   void pause() {
@@ -377,11 +380,6 @@ class WorkOutTimer extends AnimationController {
   void reset() {
     _wasActive = false;
     super.reset();
-  }
-
-  void restart({bool useDelay = true, Duration? startFrom}) {
-    reset();
-    start(startFrom: startFrom);
   }
 
   void add(Duration duration, {bool start = false, Duration changeAnimationDuration = const Duration(seconds: 0)}) {

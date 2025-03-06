@@ -10,7 +10,7 @@ import 'package:ex_app/Screens/home/widgets/workout_timer.dart';
 import 'package:ex_app/Screens/home/widgets/reset_timer.dart';
 import 'package:ex_app/Screens/home/widgets/total_timer.dart';
 import 'package:ex_app/widgets/custom_circle_button.dart';
-import 'package:ex_app/widgets/dialog_box.dart';
+// import 'package:ex_app/widgets/dialog_box.dart';
 import 'package:flutter/material.dart';
 
 class ReadyPage extends StatefulWidget {
@@ -24,9 +24,9 @@ class ReadyPage extends StatefulWidget {
 }
 
 class _ReadyPageState extends State<ReadyPage> with TickerProviderStateMixin {
-  late RestTimer restTimer = RestTimer(this);
-  late TotalTimer totalTimer = TotalTimer(this);
-  late WorkOutTimer workoutTimer = WorkOutTimer(this);
+  late RestTimer restTimer;
+  late TotalTimer totalTimer;
+  late WorkOutTimer workoutTimer;
 
   PageController controller = PageController();
   int selectIndex = 0;
@@ -41,10 +41,14 @@ class _ReadyPageState extends State<ReadyPage> with TickerProviderStateMixin {
   double totCalerios = 0.0;
   @override
   void initState() {
-    setState(() {
-      count = widget.w.duration;
-    });
     super.initState();
+    restTimer = RestTimer(this);
+    totalTimer = TotalTimer(this);
+    workoutTimer = WorkOutTimer(
+      this,
+      duration: Duration(seconds: int.parse(widget.w.level.exercise[0].time)),
+    );
+    count = widget.w.duration;
   }
 
   // void timecount() {
@@ -86,311 +90,202 @@ class _ReadyPageState extends State<ReadyPage> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: white,
-        elevation: 0,
-        centerTitle: true,
-        leadingWidth: 50,
-        leading: CustomCircleButton(
-          onTap: () {
-            Navigator.pop(context);
-          },
-          imagePath: 'back.png',
-        ),
-        title: Text(
-          widget.w.level.title,
-          style: TextStyle(
-            color: black.withOpacity(0.7),
-            fontSize: 2.5 * SizeConfig.text!,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        actions: [
-          IconButton(
-            onPressed: () {
-              if (isPlay) {
-                setState(() {
-                  isPause = true;
-                  isPlay = false;
-                  isDone = false;
-                  restTimer.pause();
-                });
-              }
-
-              Navigator.of(context).pushNamed(
-                '/ExerciseDetailsPage',
-                arguments: widget.w.level.exercise[selectIndex],
-              );
-            },
-            icon: const Icon(
-              Icons.menu,
-              color: blue,
+      body: SafeArea(
+        child: Column(
+          children: [
+            _buildAppBar(),
+            Expanded(
+              child: PageView.builder(
+                controller: controller,
+                physics: const NeverScrollableScrollPhysics(),
+                onPageChanged: _handlePageChange,
+                itemBuilder: (context, position) {
+                  selectIndex = position;
+                  return _buildExerciseContent(position);
+                },
+              ),
             ),
-          )
-        ],
-      ),
-      body: PageView.builder(
-        controller: controller,
-        physics: const NeverScrollableScrollPhysics(),
-        onPageChanged: (value) {
-          if (!isSkip) {
-            skipTotTime = skipTotTime + 60;
-            totCalerios = (widget.w.level.skipKcal * skipTotTime);
-          }
-        },
-        itemBuilder: (context, position) {
-          selectIndex = position;
-          return Stack(
-            children: [
-              Column(
-                children: [
-                  h30,
-                  Text(
-                    widget.w.level.exercise[position].name,
-                    style: TextStyle(
-                      color: darkBlue,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 3 * SizeConfig.text!,
-                      letterSpacing: 0.7,
-                    ),
-                  ),
-                  h10,
-                  Text(
-                    position < 9 && widget.w.level.exercise.length < 9
-                        ? '0${position + 1} of 0${widget.w.level.exercise.length}'
-                        : '${position + 1} of ${widget.w.level.exercise.length}',
-                    style: TextStyle(
-                      color: darkBlue.withOpacity(0.6),
-                      fontWeight: FontWeight.bold,
-                      letterSpacing: 0.7,
-                      fontSize: 3.5 * SizeConfig.text!,
-                    ),
-                  ),
-                  h20,
-                  Expanded(
-                    child: Stack(
-                      children: [
-                        Image.asset(
-                          widget.w.level.exercise[position].imagePath,
-                          width: double.infinity,
-                          height: double.infinity,
-                          fit: BoxFit.cover,
-                        ),
-                        Container(
-                          color: isPause == true || count != 0 ? white.withOpacity(0.5) : Colors.transparent,
-                        )
-                      ],
-                    ),
-                  )
-                ],
-              ),
-              if (isPause == true || count != 0)
-                // ? count == 4
-                // ? const SizedBox()
-                Center(
-                  child: Text(
-                    'Get Ready',
-                    style: TextStyle(
-                      color: red,
-                      fontWeight: FontWeight.bold,
-                      letterSpacing: 0.7,
-                      fontSize: 8 * SizeConfig.text!,
-                    ),
-                  ),
-                )
-              // : count == 0
-              //     ? const SizedBox()
-              //     : Center(
-              //         child: Text(
-              //           count.toString(),
-              //           style: TextStyle(
-              //             color: blue,
-              //             fontWeight: FontWeight.bold,
-              //             letterSpacing: 0.7,
-              //             fontSize: 8 * SizeConfig.text!,
-              //           ),
-              //         ),
-              //       ),
-              // : const SizedBox(),
-              ,
-              isPause
-                  ? Center(
-                      child: Text(
-                        'Pause',
-                        style: TextStyle(
-                          color: red,
-                          fontWeight: FontWeight.bold,
-                          letterSpacing: 0.7,
-                          fontSize: 8 * SizeConfig.text!,
-                        ),
-                      ),
-                    )
-                  : const SizedBox(),
-            ],
-          );
-        },
-        itemCount: widget.w.level.exercise.length, // Can be null
-      ),
-      bottomNavigationBar: BottomAppBar(
-        elevation: 0,
-        child: Container(
-          color: white,
-          height: 25 * SizeConfig.height!,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              controlBtn(
-                image: isPause ? 'stop' : 'pause',
-                onTap: () {
-                  if (isPause) {
-                    showDialog(
-                        context: context,
-                        builder: (context) {
-                          return AppDialog(
-                            title: 'End Workout',
-                            subTitle: "Are you sure you want to End current Workout session?",
-                            onContinue: () {
-                              Navigator.of(context).pushNamed(
-                                '/ViewAllExercisePage',
-                                arguments: widget.w.level,
-                              );
-                            },
-                          );
-                        });
-                  }
-                  if (isPlay) {
-                    setState(() {
-                      isPause = true;
-                      isPlay = false;
-                      isDone = false;
-                      restTimer.pause();
-                    });
-                  }
-                },
-              ),
-              MaterialButton(
-                splashColor: white,
-                highlightColor: white,
-                onPressed: () {
-                  setState(() {
-                    count = widget.w.duration;
-                    isSkip = false;
-                    isPlay = true;
-                    isPause = false;
-                  });
-                  // timecount();
-                  pauseAndRePlay();
-                },
-                child: isPlay
-                    ? Container(
-                        height: 19 * SizeConfig.height!,
-                        width: 19 * SizeConfig.height!,
-                        decoration: BoxDecoration(
-                          boxShadow: [
-                            BoxShadow(
-                              color: blueShadow.withOpacity(0.6),
-                              offset: const Offset(0, 10),
-                              blurRadius: 20.0,
-                            )
-                          ],
-                          color: white,
-                          shape: BoxShape.circle,
-                        ),
-                        margin: EdgeInsets.symmetric(vertical: 1 * SizeConfig.height!),
-                        child: workOutStart
-                            ? CustomWorkOutTimer(
-                                child: SizedBox(
-                                  height: 10 * SizeConfig.height!,
-                                  width: 10 * SizeConfig.height!,
-                                  //This is a small circle
-                                  child: smallcircletimer(),
-                                ),
-                                controller: workoutTimer,
-                                duration: widget.w.level.exercise[selectIndex].duration,
-                                timerStyle: WOTimerStyle.ring,
-                                onStart: totalTimer.start,
-                                onEnd: handleTimerOnEnd3,
-                                backgroundColor: blue.withOpacity(0.2),
-                                progressIndicatorColor: red.withOpacity(0.8),
-                                progressIndicatorDirection: WOTimerProgressIndicatorDirection.counterClockwise,
-                                progressTextCountDirection: WOTimerProgressTextCountDirection.singleCount,
-                                progressTextStyle: const TextStyle(color: blue, fontSize: 45),
-                                strokeWidth: 8,
-                              )
-                            : CustomTimer(
-                                duration: Duration(seconds: widget.w.duration),
-                                child: SizedBox(
-                                  height: 10 * SizeConfig.height!,
-                                  width: 10 * SizeConfig.height!,
-                                  //This is a small circle
-                                  child: smallcircletimer(),
-                                ),
-                                controller: restTimer,
-                                timerStyle: TimerStyle.ring,
-                                onStart: handleTimerOnStart,
-                                onEnd: handleTimerOnEnd,
-                                backgroundColor: blue.withOpacity(0.3),
-                                progressIndicatorColor: darkBlue,
-                                progressIndicatorDirection: TimerProgressIndicatorDirection.clockwise,
-                                progressTextCountDirection: TimerProgressTextCountDirection.singleCount,
-                                progressTextStyle: const TextStyle(
-                                  color: Colors.black,
-                                  fontSize: 50,
-                                ),
-                                strokeWidth: 8,
-                              ),
-                      )
-                    : Container(
-                        height: 15 * SizeConfig.height!,
-                        width: 15 * SizeConfig.height!,
-                        decoration: BoxDecoration(
-                          boxShadow: [
-                            BoxShadow(
-                              color: blueShadow.withOpacity(0.6),
-                              offset: const Offset(0, 10),
-                              blurRadius: 20.0,
-                            )
-                          ],
-                          color: white,
-                          shape: BoxShape.circle,
-                          border: Border.all(color: blue.withOpacity(0.6), width: 1.2),
-                        ),
-                        child: Center(
-                          child: Image.asset(
-                            'assets/icons/play.png',
-                            scale: 0.5,
-                            color: darkBlue,
-                            height: 8 * SizeConfig.height!,
-                          ),
-                        ),
-                      ),
-              ),
-              controlBtn(
-                image: 'fast_forward',
-                onTap: () {
-                  if (workoutTimer.duration != null) {
-                    skipButton();
-                  }
-
-                  setState(() {
-                    controller.jumpToPage(selectIndex + 1);
-                    isPlay = false;
-                    workOutStart = false;
-                    isPause = false;
-                  });
-                  if (selectIndex == widget.w.level.exercise.length - 1) {
-                    saveDataTodatabase();
-                  }
-                },
-              ),
-            ],
-          ),
+            _buildControlPanel(),
+          ],
         ),
       ),
     );
   }
 
-  GestureDetector controlBtn({required String? image, required Function() onTap}) {
+  Widget _buildAppBar() {
+    return Container(
+      padding: EdgeInsets.symmetric(
+        horizontal: 2 * SizeConfig.width!,
+        vertical: 1 * SizeConfig.height!,
+      ),
+      decoration: BoxDecoration(
+        color: white,
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.05),
+            blurRadius: 10,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Row(
+        children: [
+          CustomCircleButton(
+            onTap: () => Navigator.pop(context),
+            imagePath: 'back.png',
+          ),
+          Expanded(
+            child: Text(
+              widget.w.level.title,
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                color: const Color(0xFF1A237E),
+                fontSize: 2.5 * SizeConfig.text!,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+          IconButton(
+            onPressed: _showExerciseDetails,
+            icon: const Icon(Icons.info_outline_rounded, color: Color(0xFF1A237E)),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildExerciseContent(int position) {
+    return Column(
+      children: [
+        _buildExerciseHeader(position),
+        Expanded(
+          child: _buildExerciseImage(position),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildExerciseHeader(int position) {
+    return AnimatedOpacity(
+      duration: const Duration(milliseconds: 300),
+      opacity: isPause || count != 0 ? 0.5 : 1.0,
+      child: Padding(
+        padding: EdgeInsets.all(2 * SizeConfig.height!),
+        child: Column(
+          children: [
+            Text(
+              widget.w.level.exercise[position].name,
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                color: const Color(0xFF1A237E),
+                fontWeight: FontWeight.bold,
+                fontSize: 3 * SizeConfig.text!,
+                letterSpacing: 0.7,
+              ),
+            ),
+            h10,
+            Container(
+              padding: EdgeInsets.symmetric(
+                horizontal: 2 * SizeConfig.width!,
+                vertical: SizeConfig.height!,
+              ),
+              decoration: BoxDecoration(
+                color: const Color(0xFFE3F2FD),
+                borderRadius: BorderRadius.circular(20),
+              ),
+              child: Text(
+                position < 9 && widget.w.level.exercise.length < 9
+                    ? '0${position + 1} of 0${widget.w.level.exercise.length}'
+                    : '${position + 1} of ${widget.w.level.exercise.length}',
+                style: TextStyle(
+                  color: const Color(0xFF1A237E),
+                  fontWeight: FontWeight.bold,
+                  letterSpacing: 0.7,
+                  fontSize: 2.5 * SizeConfig.text!,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildExerciseImage(int position) {
+    return Stack(
+      fit: StackFit.expand,
+      children: [
+        Hero(
+          tag: 'exercise_${widget.w.level.exercise[position].name}',
+          child: Container(
+            decoration: BoxDecoration(
+              image: DecorationImage(
+                image: AssetImage(widget.w.level.exercise[position].imagePath),
+                fit: BoxFit.cover,
+              ),
+            ),
+          ),
+        ),
+        if (isPause || count != 0)
+          Container(
+            color: Colors.black.withOpacity(0.5),
+            child: Center(
+              child: Text(
+                isPause ? 'PAUSED' : 'GET READY',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 8 * SizeConfig.text!,
+                  fontWeight: FontWeight.bold,
+                  letterSpacing: 2,
+                  shadows: [
+                    Shadow(
+                      color: Colors.black.withOpacity(0.3),
+                      offset: const Offset(0, 2),
+                      blurRadius: 4,
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+      ],
+    );
+  }
+
+  Widget _buildControlPanel() {
+    return Container(
+      padding: EdgeInsets.all(2 * SizeConfig.height!),
+      decoration: BoxDecoration(
+        color: white,
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.1),
+            blurRadius: 10,
+            offset: const Offset(0, -5),
+          ),
+        ],
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          _buildControlButton(
+            icon: Icons.skip_previous_rounded,
+            onTap: () => controller.previousPage(
+              duration: const Duration(milliseconds: 300),
+              curve: Curves.easeInOut,
+            ),
+          ),
+          _buildTimerButton(),
+          _buildControlButton(
+            icon: Icons.skip_next_rounded,
+            onTap: () => _handleSkipForward(),
+          ),
+        ],
+      ),
+    );
+  }
+
+  GestureDetector _buildControlButton({required IconData icon, required Function() onTap}) {
     return GestureDetector(
       onTap: onTap,
       child: Container(
@@ -408,12 +303,91 @@ class _ReadyPageState extends State<ReadyPage> with TickerProviderStateMixin {
             )
           ],
         ),
-        child: Image.asset(
-          'assets/icons/$image.png',
+        child: Icon(
+          icon,
           color: darkBlue,
-          height: 3 * SizeConfig.height!,
+          size: 3 * SizeConfig.height!,
         ),
       ),
+    );
+  }
+
+  Widget _buildTimerButton() {
+    return MaterialButton(
+      splashColor: white,
+      highlightColor: white,
+      onPressed: () {
+        setState(() {
+          count = widget.w.duration;
+          isSkip = false;
+          isPlay = true;
+          isPause = false;
+        });
+        pauseAndRePlay();
+      },
+      child: isPlay
+          ? Container(
+              height: 19 * SizeConfig.height!,
+              width: 19 * SizeConfig.height!,
+              decoration: BoxDecoration(
+                boxShadow: [
+                  BoxShadow(
+                    color: blueShadow.withOpacity(0.6),
+                    offset: const Offset(0, 10),
+                    blurRadius: 20.0,
+                  )
+                ],
+                color: white,
+                shape: BoxShape.circle,
+              ),
+              margin: EdgeInsets.symmetric(vertical: 1 * SizeConfig.height!),
+              child: workOutStart
+                  ? CustomWorkOutTimer(
+                      child: SizedBox(
+                        height: 10 * SizeConfig.height!,
+                        width: 10 * SizeConfig.height!,
+                        child: smallcircletimer(),
+                      ),
+                      controller: workoutTimer,
+                      duration: widget.w.level.exercise[selectIndex].duration,
+                      timerStyle: WOTimerStyle.ring,
+                      onStart: totalTimer.start,
+                      onEnd: handleTimerOnEnd3,
+                      backgroundColor: blue.withOpacity(0.2),
+                      progressIndicatorColor: red.withOpacity(0.8),
+                      progressIndicatorDirection: WOTimerProgressIndicatorDirection.counterClockwise,
+                      progressTextCountDirection: WOTimerProgressTextCountDirection.singleCount,
+                      progressTextStyle: const TextStyle(color: blue, fontSize: 45),
+                      strokeWidth: 8,
+                    )
+                  : CustomTimer(
+                      duration: Duration(seconds: widget.w.duration),
+                      child: SizedBox(
+                        height: 10 * SizeConfig.height!,
+                        width: 10 * SizeConfig.height!,
+                        child: smallcircletimer(),
+                      ),
+                      controller: restTimer,
+                      timerStyle: TimerStyle.ring,
+                      onStart: handleTimerOnStart,
+                      onEnd: handleTimerOnEnd,
+                      backgroundColor: blue.withOpacity(0.3),
+                      progressIndicatorColor: darkBlue,
+                      progressIndicatorDirection: TimerProgressIndicatorDirection.clockwise,
+                      progressTextCountDirection: TimerProgressTextCountDirection.singleCount,
+                      progressTextStyle: const TextStyle(
+                        color: Colors.black,
+                        fontSize: 50,
+                      ),
+                      strokeWidth: 8,
+                    ),
+            )
+          : Image.asset(
+              'assets/icons/play.png',
+              scale: 0.5,
+              color: darkBlue,
+              height: 8 * SizeConfig.height!,
+            ),
     );
   }
 
@@ -437,13 +411,8 @@ class _ReadyPageState extends State<ReadyPage> with TickerProviderStateMixin {
   }
 
   void handleTimerOnStart() {
-    // const oneSec = Duration(seconds: 1);
-
-    // Timer.periodic(oneSec, (timer) {
     setState(() {
       count = widget.w.duration;
-      // count--;
-      // });
     });
   }
 
@@ -504,10 +473,6 @@ class _ReadyPageState extends State<ReadyPage> with TickerProviderStateMixin {
       totalTimer.stop();
       workoutTimer.stop();
       if (!isSkip) {
-        // Duration wDurationValue =
-        //     workoutTimer.duration! * workoutTimer.value;
-        // var workOutDuration = wDurationValue.inSeconds % 60;
-        // skipTotTime = skipTotTime + workOutDuration;
         skipTotTime = skipTotTime + 60;
         totCalerios = (widget.w.level.skipKcal * skipTotTime);
       }
@@ -538,6 +503,35 @@ class _ReadyPageState extends State<ReadyPage> with TickerProviderStateMixin {
       (route) => false,
       arguments: CompletPageArguments(widget.w.level, event),
     );
+  }
+
+  void _handlePageChange(int index) {
+    if (!isSkip) {
+      skipTotTime = skipTotTime + 60;
+      totCalerios = (widget.w.level.skipKcal * skipTotTime);
+    }
+  }
+
+  void _showExerciseDetails() {
+    Navigator.of(context).pushNamed(
+      '/ExerciseDetailsPage',
+      arguments: widget.w.level.exercise[selectIndex],
+    );
+  }
+
+  void _handleSkipForward() {
+    if (workoutTimer.duration != null) {
+      skipButton();
+    }
+
+    setState(() {
+      controller.jumpToPage(selectIndex + 1);
+      workOutStart = false;
+      isPause = false;
+    });
+    if (selectIndex == widget.w.level.exercise.length - 1) {
+      saveDataTodatabase();
+    }
   }
 
   @override
