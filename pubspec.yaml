@@ -37,6 +37,7 @@ dependencies:
   timezone: ^0.10.0
   sqflite:
   path:
+  audioplayers: ^5.2.1
 
 dev_dependencies:
   flutter_test:
@@ -63,6 +64,7 @@ flutter:
     - assets/gif/Beginner/
     - assets/gif/Intermediate/
     - assets/gif/Licw/
+    - assets/sound.mp3
     - assets/
 
   fonts:

@@ -295,13 +295,11 @@ class _RemindersPageState extends State<RemindersPage> {
       floatingActionButton: FloatingActionButton(
         backgroundColor: blue,
         onPressed: () async {
-          // var selectedTime = await showTimePicker(
-          //   context: context,
-          //   initialTime: TimeOfDay.now(),
-          // );
+          var selectedTime = await showTimePicker(
+            context: context,
+            initialTime: TimeOfDay.now(),
+          );
 
-          var now = DateTime.now().add(const Duration(minutes: 1));
-          var selectedTime = TimeOfDay(hour: now.hour, minute: now.minute);
           if (selectedTime != null) {
             final now = DateTime.now();
             var selectedDateTime = DateTime(
@@ -314,7 +312,8 @@ class _RemindersPageState extends State<RemindersPage> {
             var weekID = now.toIso8601String();
             //  setState(() {
             alarmTime = selectedDateTime;
-            // addAlarm(alarmTime);
+            // addAlarm(
+            // );
             alarmOn(1, selectedDateTime);
             var insertArlam = Alarm(isOn: true, remindTime: alarmTime, weekID: weekID);
             //scheduleNotification(alarmTime, 0);
@@ -345,40 +344,7 @@ class _RemindersPageState extends State<RemindersPage> {
     final alarmTime = tz.TZDateTime.parse(tz.local, scheduleAlarmDateTime.toIso8601String());
     // scheduleNotification();
     scheduleNotification(id, alarmTime);
-    // await AndroidAlarmManager.periodic(const Duration(seconds: 5), id, () {
-    //   print(scheduledTime);
-    // });
-    // await AndroidAlarmManager.oneShot(
-    //   const Duration(seconds: 5),
-    //   // Ensure we have a unique alarm ID.
-    //   id,
-    //   scheduleNotification,
-    //   exact: true,
-    //   wakeup: true,
-    // );
   }
-
-  // Future<void> scheduleNotification() async {
-  //   const androidChannel = AndroidNotificationDetails(
-  //     '0',
-  //     'reminder',
-  //     channelDescription: 'Exercise Reminder Notification',
-  //     icon: 'logo',
-  //     importance: Importance.max,
-  //     priority: Priority.high,
-  //     sound: RawResourceAndroidNotificationSound('a_long_cold_sting'),
-  //     largeIcon: DrawableResourceAndroidBitmap('logo'),
-  //   );
-
-  //   const channelSpecifics = NotificationDetails(android: androidChannel);
-  //   await flutterLocalNotificationsPlugin.show(
-  //     1,
-  //     'Hello',
-  //     'I\'ll Remind you about the planned workout',
-  //     channelSpecifics,
-  //     payload: 'Test Payload',
-  //   );
-  // }
 
   void orderToWeekname() {
     weekShort.sort((a, b) => a.setOrder.compareTo(b.setOrder));
@@ -428,47 +394,8 @@ Future<void> scheduleNotification(int id, tz.TZDateTime time, {bool isSnooze = f
   );
 }
 
-// tz.TZDateTime _nextInstanceOfTime() {
-//   final tz.TZDateTime now = tz.TZDateTime.now(tz.local);
-//   tz.TZDateTime scheduledDate =
-//       tz.TZDateTime(tz.local, now.year, now.month, now.day, 10);
-//   if (scheduledDate.isBefore(now)) {
-//     scheduledDate = scheduledDate.add(const Duration(days: 1));
-//   }
-//   return scheduledDate;
-// }
-
-// tz.TZDateTime _nextInstanceOfMondayTenAM() {
-//   tz.TZDateTime scheduledDate = _nextInstanceOfTime();
-//   while (scheduledDate.weekday != DateTime.monday) {
-//     scheduledDate = scheduledDate.add(const Duration(days: 1));
-//   }
-//   return scheduledDate;
-// }
-
-// _nextInstanceOfTime(int hour, int min) {
-//   final DateTime now = DateTime.now();
-//   DateTime scheduledDate = DateTime(now.year, now.month, now.day, hour, min);
-//   if (scheduledDate.isBefore(now)) {
-//     scheduledDate = scheduledDate.add(const Duration(days: 1));
-//   }
-//   return scheduledDate;
-// }
-
-// tz.TZDateTime _nextInstanceOfWeek(DateTime time) {
-//   tz.TZDateTime scheduledDate = _nextInstanceOfTime(time.hour, time.minute);
-//   while (scheduledDate.weekday != DateTime.monday) {
-//     scheduledDate = scheduledDate.add(const Duration(days: 1));
-//   }
-
-//   return scheduledDate;
-// }
-
 tz.TZDateTime _nextInstanceOfTenAM(tz.TZDateTime now) {
-  // final tz.TZDateTime now = tz.TZDateTime.now(tz.local);
   tz.TZDateTime scheduledDate = tz.TZDateTime.local(now.year, now.month, now.day, now.hour, now.minute);
-  // tz.TZDateTime scheduledDate = tz.TZDateTime(
-  //     tz.local, now.year, now.month, now.day, now.hour, now.minute);
   if (scheduledDate.isBefore(now)) {
     scheduledDate = scheduledDate.add(const Duration(days: 1));
   }

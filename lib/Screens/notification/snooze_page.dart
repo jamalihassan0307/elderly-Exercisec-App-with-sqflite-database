@@ -1,3 +1,5 @@
+// ignore_for_file: use_super_parameters
+
 import 'package:ex_app/main.dart';
 import 'package:flutter/material.dart';
 import 'package:ex_app/const/color.dart';
@@ -5,6 +7,7 @@ import 'package:ex_app/Screens/profile/reminders_page.dart';
 // import 'package:timezone/timezone.dart' as tz;
 import 'dart:async';
 // import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:audioplayers/audioplayers.dart';
 
 class SnoozePage extends StatefulWidget {
   final int notificationId;
@@ -18,11 +21,20 @@ class SnoozePage extends StatefulWidget {
 class _SnoozePageState extends State<SnoozePage> {
   Timer? _timer;
   int _remainingSeconds = 60;
+  late AudioPlayer audioPlayer;
 
   @override
   void initState() {
     super.initState();
     _startSnoozeTimer();
+    _startAlarmSound();
+  }
+
+  Future<void> _startAlarmSound() async {
+    audioPlayer = AudioPlayer();
+    await audioPlayer.play(AssetSource('sound.mp3'));
+    // Loop the sound
+    audioPlayer.setReleaseMode(ReleaseMode.loop);
   }
 
   void _startSnoozeTimer() {
@@ -43,6 +55,7 @@ class _SnoozePageState extends State<SnoozePage> {
 
   void _handleSnooze() async {
     _timer?.cancel();
+    audioPlayer.stop(); // Stop the sound
     await flutterLocalNotificationsPlugin.cancel(widget.notificationId);
     await RemindersPage.handleSnooze(widget.notificationId);
     if (mounted) {
@@ -59,6 +72,7 @@ class _SnoozePageState extends State<SnoozePage> {
   @override
   void dispose() {
     _timer?.cancel();
+    audioPlayer.dispose(); 
     super.dispose();
   }
 
@@ -73,6 +87,7 @@ class _SnoozePageState extends State<SnoozePage> {
             if (details.primaryVelocity! > 0) {
               _handleSnooze();
             } else if (details.primaryVelocity! < 0) {
+              audioPlayer.stop(); // Stop the sound
               flutterLocalNotificationsPlugin.cancel(widget.notificationId);
               Navigator.pop(context);
             }

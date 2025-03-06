@@ -70,7 +70,7 @@ void notificationTapBackground(NotificationResponse response) async {
 // Handle snooze action
 Future<void> _handleSnooze(int id) async {
   // Schedule new notification for 10 minutes later
-  final snoozeTime = tz.TZDateTime.now(tz.local).add(const Duration(seconds: 10));
+  final snoozeTime = tz.TZDateTime.now(tz.local).add(const Duration(minutes: 10));
   print(snoozeTime);
   await scheduleNotification(id, snoozeTime);
 }
