@@ -2,7 +2,7 @@ I'll help you create a README for your Elderly Exercise App project using the pr
 
 <div align="center">
   <h1>
-    <img src="images/Logo.png" width="80px"><br/>
+    <img src="assets\images\Logo.png" width="80px"><br/>
     Elderly Exercise App with SQLite Database
   </h1>
   <h3>A Comprehensive Solution for Elderly Fitness Management</h3>
