@@ -1,4 +1,3 @@
-import 'package:android_alarm_manager_plus/android_alarm_manager_plus.dart';
 import 'package:ex_app/const/color.dart';
 import 'package:ex_app/const/size/size_config.dart';
 import 'package:ex_app/const/space.dart';
@@ -74,13 +73,10 @@ class _RemindersPageState extends State<RemindersPage> {
 
                   return Container(
                     margin: EdgeInsets.all(2.3 * SizeConfig.height!),
-                    padding: EdgeInsets.only(
-                        left: 3 * SizeConfig.width!,
-                        top: 1.5 * SizeConfig.height!),
+                    padding: EdgeInsets.only(left: 3 * SizeConfig.width!, top: 1.5 * SizeConfig.height!),
                     decoration: BoxDecoration(
                       color: white,
-                      borderRadius:
-                          BorderRadius.circular(1.5 * SizeConfig.height!),
+                      borderRadius: BorderRadius.circular(1.5 * SizeConfig.height!),
                       boxShadow: [
                         BoxShadow(
                           color: blueShadow.withOpacity(0.5),
@@ -143,8 +139,7 @@ class _RemindersPageState extends State<RemindersPage> {
                                   height: 2 * SizeConfig.height!,
                                   width: 30 * SizeConfig.height!,
                                   child: FutureBuilder<List<RepateAlarm>>(
-                                      future: ExerciseDatabase.instance
-                                          .readArlam(remind.weekID),
+                                      future: ExerciseDatabase.instance.readArlam(remind.weekID),
                                       builder: (context, snapshot) {
                                         if (snapshot.hasData) {
                                           weekShort = snapshot.data!;
@@ -153,16 +148,13 @@ class _RemindersPageState extends State<RemindersPage> {
                                             scrollDirection: Axis.horizontal,
                                             itemCount: weekShort.length,
                                             itemBuilder: (context, index) {
-                                              var endItem =
-                                                  weekShort.length - 1;
+                                              var endItem = weekShort.length - 1;
 
                                               return Text(
                                                 '${weekShort[index].week.substring(0, 3)}${endItem == index ? '' : ','}',
                                                 style: TextStyle(
-                                                  color:
-                                                      darkBlue.withOpacity(0.7),
-                                                  fontSize:
-                                                      1.8 * SizeConfig.text!,
+                                                  color: darkBlue.withOpacity(0.7),
+                                                  fontSize: 1.8 * SizeConfig.text!,
                                                   letterSpacing: 1,
                                                   fontWeight: FontWeight.bold,
                                                 ),
@@ -213,8 +205,7 @@ class _RemindersPageState extends State<RemindersPage> {
                                 ),
                                 GestureDetector(
                                   onTap: () async {
-                                    await ExerciseDatabase.instance
-                                        .delete(remind.id!);
+                                    await ExerciseDatabase.instance.delete(remind.id!);
                                     refreshNotes();
                                   },
                                   child: Container(
@@ -276,15 +267,13 @@ class _RemindersPageState extends State<RemindersPage> {
 
           if (selectedTime != null) {
             final now = DateTime.now();
-            var selectedDateTime = DateTime(now.year, now.month, now.day,
-                selectedTime.hour, selectedTime.minute);
+            var selectedDateTime = DateTime(now.year, now.month, now.day, selectedTime.hour, selectedTime.minute);
             var weekID = now.toIso8601String();
             //  setState(() {
             alarmTime = selectedDateTime;
             // addAlarm(alarmTime);
             alarmOn(1, selectedDateTime);
-            var insertArlam =
-                Alarm(isOn: true, remindTime: alarmTime, weekID: weekID);
+            var insertArlam = Alarm(isOn: true, remindTime: alarmTime, weekID: weekID);
             //scheduleNotification(alarmTime, 0);
             ExerciseDatabase.instance.insertArlam(insertArlam);
             await showDialog(
@@ -314,8 +303,7 @@ class _RemindersPageState extends State<RemindersPage> {
     } else {
       scheduleAlarmDateTime = scheduledTime.add(const Duration(days: 1));
     }
-    final alarmTime =
-        tz.TZDateTime.parse(tz.local, scheduleAlarmDateTime.toIso8601String());
+    final alarmTime = tz.TZDateTime.parse(tz.local, scheduleAlarmDateTime.toIso8601String());
     // scheduleNotification();
     scheduleNotification(id, alarmTime);
     // await AndroidAlarmManager.periodic(const Duration(seconds: 5), id, () {
@@ -379,8 +367,7 @@ Future<void> scheduleNotification(int id, tz.TZDateTime time) async {
       channelSpecifics,
       payload: 'Test Payload',
       androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
-      uiLocalNotificationDateInterpretation:
-          UILocalNotificationDateInterpretation.absoluteTime,
+      uiLocalNotificationDateInterpretation: UILocalNotificationDateInterpretation.absoluteTime,
       matchDateTimeComponents: DateTimeComponents.dayOfWeekAndTime);
 }
 
@@ -422,8 +409,7 @@ Future<void> scheduleNotification(int id, tz.TZDateTime time) async {
 
 tz.TZDateTime _nextInstanceOfTenAM(tz.TZDateTime now) {
   // final tz.TZDateTime now = tz.TZDateTime.now(tz.local);
-  tz.TZDateTime scheduledDate =
-      tz.TZDateTime.local(now.year, now.month, now.day, now.hour, now.minute);
+  tz.TZDateTime scheduledDate = tz.TZDateTime.local(now.year, now.month, now.day, now.hour, now.minute);
   // tz.TZDateTime scheduledDate = tz.TZDateTime(
   //     tz.local, now.year, now.month, now.day, now.hour, now.minute);
   if (scheduledDate.isBefore(now)) {
