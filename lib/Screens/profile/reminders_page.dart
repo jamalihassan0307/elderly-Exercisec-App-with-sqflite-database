@@ -67,269 +67,277 @@ class _RemindersPageState extends State<RemindersPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: white,
-        elevation: 0,
-        centerTitle: true,
-        leadingWidth: 6.2 * SizeConfig.height!,
-        leading: CustomCircleButton(
-          onTap: () {
-            Navigator.pop(context);
-          },
-          imagePath: 'back.png',
+      appBar: _buildAppBar(),
+      body: SafeArea(
+        child: CustomPicker(
+          child: arlams.isNotEmpty ? _buildRemindersList() : _buildEmptyState(),
         ),
-        title: Text(
-          'Reminders',
-          style: TextStyle(
-            color: black.withOpacity(0.7),
-            fontSize: 2.9 * SizeConfig.text!,
-            letterSpacing: 2,
-            fontWeight: FontWeight.bold,
+      ),
+      floatingActionButton: _buildAddButton(),
+    );
+  }
+
+  PreferredSizeWidget _buildAppBar() {
+    return AppBar(
+      elevation: 0,
+      backgroundColor: const Color(0xFF1A237E),
+      leading: CustomCircleButton(
+        onTap: () => Navigator.pop(context),
+        imagePath: 'back.png',
+      ),
+      title: Text(
+        'Reminders',
+        style: TextStyle(
+          color: white,
+          fontSize: 2.8 * SizeConfig.text!,
+          fontWeight: FontWeight.bold,
+          letterSpacing: 0.5,
+        ),
+      ),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(
+          bottom: Radius.circular(3 * SizeConfig.height!),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildRemindersList() {
+    return ListView.builder(
+      padding: EdgeInsets.all(2 * SizeConfig.height!),
+      itemCount: arlams.length,
+      itemBuilder: (context, index) {
+        final remind = arlams[index];
+        final time = DateFormat().add_jm().format(remind.remindTime);
+
+        return Container(
+          margin: EdgeInsets.only(bottom: 2 * SizeConfig.height!),
+          decoration: BoxDecoration(
+            color: white,
+            borderRadius: BorderRadius.circular(15),
+            boxShadow: [
+              BoxShadow(
+                color: const Color(0xFF1A237E).withOpacity(0.08),
+                offset: const Offset(0, 4),
+                blurRadius: 15,
+              )
+            ],
           ),
+          child: Column(
+            children: [
+              _buildReminderHeader(remind, time),
+              _buildReminderDetails(remind),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _buildReminderHeader(Alarm remind, String time) {
+    return Padding(
+      padding: EdgeInsets.all(2 * SizeConfig.height!),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                time,
+                style: TextStyle(
+                  color: const Color(0xFF1A237E),
+                  fontSize: 3.2 * SizeConfig.text!,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              Text(
+                getRemainingTime(remind.remindTime),
+                style: TextStyle(
+                  color: Colors.orange,
+                  fontSize: 1.8 * SizeConfig.text!,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ],
+          ),
+          Transform.scale(
+            scale: 0.8,
+            child: Switch(
+              value: remind.isOn,
+              onChanged: (value) => _updateAlarmState(remind, value),
+              activeColor: const Color(0xFF1A237E),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildReminderDetails(Alarm remind) {
+    return Container(
+      padding: EdgeInsets.all(2 * SizeConfig.height!),
+      decoration: BoxDecoration(
+        color: const Color(0xFFF5F5F5),
+        borderRadius: BorderRadius.vertical(
+          bottom: Radius.circular(15),
         ),
       ),
-      body: arlams.isNotEmpty
-          ? CustomPicker(
-              child: ListView(
-                children: arlams.map<Widget>((remind) {
-                  var time = DateFormat().add_jm().format(remind.remindTime);
-
-                  return Container(
-                    margin: EdgeInsets.all(2.3 * SizeConfig.height!),
-                    padding: EdgeInsets.only(left: 3 * SizeConfig.width!, top: 1.5 * SizeConfig.height!),
-                    decoration: BoxDecoration(
-                      color: white,
-                      borderRadius: BorderRadius.circular(1.5 * SizeConfig.height!),
-                      boxShadow: [
-                        BoxShadow(
-                          color: blueShadow.withOpacity(0.5),
-                          offset: const Offset(1, 5),
-                          blurRadius: 10,
-                          spreadRadius: 1,
-                        )
-                      ],
-                    ),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  time,
-                                  style: TextStyle(
-                                    color: black.withOpacity(0.7),
-                                    fontSize: 3 * SizeConfig.text!,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                                Text(
-                                  getRemainingTime(remind.remindTime),
-                                  style: TextStyle(
-                                    color: blue,
-                                    fontSize: 2 * SizeConfig.text!,
-                                  ),
-                                ),
-                              ],
-                            ),
-                            Transform.scale(
-                              scale: 0.7,
-                              child: CupertinoSwitch(
-                                activeColor: blue,
-                                value: remind.isOn,
-                                onChanged: (value) {
-                                  setState(() {
-                                    Alarm alarm = Alarm(
-                                      id: remind.id,
-                                      isOn: value,
-                                      weekID: remind.weekID,
-                                      remindTime: remind.remindTime,
-                                    );
-                                    ExerciseDatabase.instance.update(alarm);
-                                  });
-                                  refreshNotes();
-                                },
-                              ),
-                            ),
-                          ],
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  'Repeat',
-                                  style: TextStyle(
-                                    color: black.withOpacity(0.4),
-                                    fontSize: 2.2 * SizeConfig.text!,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                                SizedBox(
-                                  height: 2 * SizeConfig.height!,
-                                  width: 30 * SizeConfig.height!,
-                                  child: FutureBuilder<List<RepateAlarm>>(
-                                      future: ExerciseDatabase.instance.readArlam(remind.weekID),
-                                      builder: (context, snapshot) {
-                                        if (snapshot.hasData) {
-                                          weekShort = snapshot.data!;
-                                          orderToWeekname();
-                                          return ListView.builder(
-                                            scrollDirection: Axis.horizontal,
-                                            itemCount: weekShort.length,
-                                            itemBuilder: (context, index) {
-                                              var endItem = weekShort.length - 1;
-
-                                              return Text(
-                                                '${weekShort[index].week.substring(0, 3)}${endItem == index ? '' : ','}',
-                                                style: TextStyle(
-                                                  color: darkBlue.withOpacity(0.7),
-                                                  fontSize: 1.8 * SizeConfig.text!,
-                                                  letterSpacing: 1,
-                                                  fontWeight: FontWeight.bold,
-                                                ),
-                                              );
-                                            },
-                                          );
-                                        } else {
-                                          return const CircularProgressIndicator();
-                                        }
-                                      }),
-                                ),
-                                h5,
-                              ],
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: [
-                                GestureDetector(
-                                  onTap: () async {
-                                    await showDialog(
-                                        context: context,
-                                        builder: (context) {
-                                          return WeekDaysPicker(
-                                            isUpdate: true,
-                                            weekId: remind.weekID,
-                                          );
-                                        });
-                                    refreshNotes();
-                                  },
-                                  child: Container(
-                                    height: 5.3 * SizeConfig.height!,
-                                    width: 6 * SizeConfig.height!,
-                                    decoration: BoxDecoration(
-                                      color: blue.withOpacity(0.1),
-                                      borderRadius: const BorderRadius.only(
-                                        topLeft: Radius.circular(10),
-                                      ),
-                                    ),
-                                    child: Center(
-                                      child: Image.asset(
-                                        'assets/icons/edit.png',
-                                        scale: 1.2,
-                                        //height: 2.5 * SizeConfig.height!,
-                                        color: darkBlue.withOpacity(0.8),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                GestureDetector(
-                                  onTap: () async {
-                                    await ExerciseDatabase.instance.delete(remind.id!);
-                                    refreshNotes();
-                                  },
-                                  child: Container(
-                                    height: 5.3 * SizeConfig.height!,
-                                    width: 6 * SizeConfig.height!,
-                                    decoration: BoxDecoration(
-                                      color: red.withOpacity(0.1),
-                                      borderRadius: const BorderRadius.only(
-                                        bottomRight: Radius.circular(10),
-                                      ),
-                                    ),
-                                    child: Center(
-                                      child: Image.asset(
-                                        'assets/icons/delete.png',
-                                        scale: 1.8,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            )
-                          ],
-                        ),
-                      ],
-                    ),
-                  );
-                }).toList(),
-              ),
-            )
-          : Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Image.asset(
-                    'assets/icons/bell.png',
-                    color: blue.withOpacity(0.5),
-                    scale: 0.2,
-                    height: 10 * SizeConfig.height!,
+      child: Row(
+        children: [
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Repeat',
+                  style: TextStyle(
+                    color: Colors.grey[600],
+                    fontSize: 1.8 * SizeConfig.text!,
                   ),
-                  h40,
-                  Text(
-                    'Please set your reminder',
-                    style: TextStyle(
-                      color: darkBlue.withOpacity(0.6),
-                      fontSize: 3 * SizeConfig.text!,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                ],
-              ),
+                ),
+                h5,
+                _buildWeekDaysList(remind),
+              ],
             ),
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: blue,
-        onPressed: () async {
-          var selectedTime = await showTimePicker(
-            context: context,
-            initialTime: TimeOfDay.now(),
-          );
-
-          if (selectedTime != null) {
-            final now = DateTime.now();
-            var selectedDateTime = DateTime(
-              now.year,
-              now.month,
-              now.day,
-              selectedTime.hour,
-              selectedTime.minute,
-            );
-            var weekID = now.toIso8601String();
-            //  setState(() {
-            alarmTime = selectedDateTime;
-            // addAlarm(
-            // );
-            alarmOn(1, selectedDateTime);
-            var insertArlam = Alarm(isOn: true, remindTime: alarmTime, weekID: weekID);
-            //scheduleNotification(alarmTime, 0);
-            ExerciseDatabase.instance.insertArlam(insertArlam);
-            await showDialog(
-                context: context,
-                builder: (context) {
-                  return WeekDaysPicker(
-                    weekId: weekID,
-                  );
-                });
-            refreshNotes();
-          }
-        },
-        child: const Icon(Icons.add),
+          ),
+          _buildActionButtons(remind),
+        ],
       ),
+    );
+  }
+
+  Widget _buildWeekDaysList(Alarm remind) {
+    return SizedBox(
+      height: 2.2 * SizeConfig.height!,
+      child: FutureBuilder<List<RepateAlarm>>(
+        future: ExerciseDatabase.instance.readArlam(remind.weekID),
+        builder: (context, snapshot) {
+          if (!snapshot.hasData) {
+            return const CircularProgressIndicator();
+          }
+          weekShort = snapshot.data!;
+          orderToWeekname();
+          return ListView.separated(
+            scrollDirection: Axis.horizontal,
+            itemCount: weekShort.length,
+            separatorBuilder: (_, __) => Text(', '),
+            itemBuilder: (context, index) {
+              return Text(
+                weekShort[index].week.substring(0, 3),
+                style: TextStyle(
+                  color: const Color(0xFF1A237E),
+                  fontSize: 1.8 * SizeConfig.text!,
+                  fontWeight: FontWeight.w500,
+                ),
+              );
+            },
+          );
+        },
+      ),
+    );
+  }
+
+  Widget _buildActionButtons(Alarm remind) {
+    return Row(
+      children: [
+        _buildIconButton(
+          onTap: () => _editReminder(remind),
+          icon: Icons.edit_rounded,
+          color: const Color(0xFF1A237E),
+        ),
+        w10,
+        _buildIconButton(
+          onTap: () => _deleteReminder(remind),
+          icon: Icons.delete_rounded,
+          color: Colors.red,
+        ),
+      ],
+    );
+  }
+
+  Widget _buildIconButton({
+    required VoidCallback onTap,
+    required IconData icon,
+    required Color color,
+  }) {
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(8),
+      child: Container(
+        padding: EdgeInsets.all(SizeConfig.height!),
+        decoration: BoxDecoration(
+          color: color.withOpacity(0.1),
+          borderRadius: BorderRadius.circular(8),
+        ),
+        child: Icon(icon, color: color, size: 2.2 * SizeConfig.height!),
+      ),
+    );
+  }
+
+  Widget _buildEmptyState() {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Image.asset(
+            'assets/icons/bell.png',
+            color: blue.withOpacity(0.5),
+            scale: 0.2,
+            height: 10 * SizeConfig.height!,
+          ),
+          h40,
+          Text(
+            'Please set your reminder',
+            style: TextStyle(
+              color: darkBlue.withOpacity(0.6),
+              fontSize: 3 * SizeConfig.text!,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildAddButton() {
+    return FloatingActionButton(
+      backgroundColor: blue,
+      onPressed: () async {
+        var selectedTime = await showTimePicker(
+          context: context,
+          initialTime: TimeOfDay.now(),
+        );
+
+        if (selectedTime != null) {
+          final now = DateTime.now();
+          var selectedDateTime = DateTime(
+            now.year,
+            now.month,
+            now.day,
+            selectedTime.hour,
+            selectedTime.minute,
+          );
+          var weekID = now.toIso8601String();
+          //  setState(() {
+          alarmTime = selectedDateTime;
+          // addAlarm(
+          // );
+          alarmOn(1, selectedDateTime);
+          var insertArlam = Alarm(isOn: true, remindTime: alarmTime, weekID: weekID);
+          //scheduleNotification(alarmTime, 0);
+          ExerciseDatabase.instance.insertArlam(insertArlam);
+          await showDialog(
+              context: context,
+              builder: (context) {
+                return WeekDaysPicker(
+                  weekId: weekID,
+                );
+              });
+          refreshNotes();
+        }
+      },
+      child: const Icon(Icons.add),
     );
   }
 
@@ -348,6 +356,36 @@ class _RemindersPageState extends State<RemindersPage> {
 
   void orderToWeekname() {
     weekShort.sort((a, b) => a.setOrder.compareTo(b.setOrder));
+  }
+
+  void _updateAlarmState(Alarm remind, bool value) {
+    setState(() {
+      Alarm alarm = Alarm(
+        id: remind.id,
+        isOn: value,
+        weekID: remind.weekID,
+        remindTime: remind.remindTime,
+      );
+      ExerciseDatabase.instance.update(alarm);
+    });
+    refreshNotes();
+  }
+
+  void _editReminder(Alarm remind) async {
+    await showDialog(
+        context: context,
+        builder: (context) {
+          return WeekDaysPicker(
+            isUpdate: true,
+            weekId: remind.weekID,
+          );
+        });
+    refreshNotes();
+  }
+
+  void _deleteReminder(Alarm remind) async {
+    await ExerciseDatabase.instance.delete(remind.id!);
+    refreshNotes();
   }
 }
 

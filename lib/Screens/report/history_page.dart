@@ -15,36 +15,109 @@ class HistoryPage extends StatefulWidget {
 
 class _HistoryPageState extends State<HistoryPage> {
   @override
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: white,
-        elevation: 0,
-        leadingWidth: 6.2 * SizeConfig.height!,
-        centerTitle: true,
-        leading: CustomCircleButton(
-          onTap: () {
-            Navigator.of(context).pushNamedAndRemoveUntil(
-              '/BottomNavBar',
-              (route) => false,
-              arguments: ScreenArguments(1, true),
-            );
-          },
-          imagePath: 'back.png',
-        ),
-        title: Text(
-          'History',
-          style: TextStyle(
-            color: black.withOpacity(0.7),
-            fontSize: 2.9 * SizeConfig.text!,
-            letterSpacing: 2,
-            fontWeight: FontWeight.bold,
+      appBar: _buildAppBar(),
+      body: SafeArea(
+        child: CustomPicker(
+          child: Padding(
+            padding: EdgeInsets.all(2 * SizeConfig.height!),
+            child: Column(
+              children: [
+                _buildMonthSelector(),
+                SizedBox(height: 2 * SizeConfig.height!),
+                Expanded(
+                  child: _buildCalendarCard(),
+                ),
+              ],
+            ),
           ),
         ),
       ),
-      body: const CustomPicker(
-        child: HistoryCalender(),
+    );
+  }
+
+  PreferredSizeWidget _buildAppBar() {
+    return AppBar(
+      elevation: 0,
+      backgroundColor: const Color(0xFF1A237E),
+      leading: CustomCircleButton(
+        onTap: () => Navigator.of(context).pushNamedAndRemoveUntil(
+          '/BottomNavBar',
+          (route) => false,
+          arguments: ScreenArguments(1, true),
+        ),
+        imagePath: 'back.png',
+      ),
+      title: Text(
+        'Workout History',
+        style: TextStyle(
+          color: white,
+          fontSize: 2.8 * SizeConfig.text!,
+          fontWeight: FontWeight.bold,
+          letterSpacing: 0.5,
+        ),
+      ),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(
+          bottom: Radius.circular(3 * SizeConfig.height!),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildMonthSelector() {
+    return Container(
+      width: double.infinity,
+      padding: EdgeInsets.symmetric(
+        horizontal: 2 * SizeConfig.width!,
+        vertical: SizeConfig.height!,
+      ),
+      decoration: BoxDecoration(
+        color: const Color(0xFFE3F2FD),
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          IconButton(
+            icon: const Icon(Icons.chevron_left, color: Color(0xFF1A237E)),
+            onPressed: () {},
+          ),
+          Text(
+            'March 2024',
+            style: TextStyle(
+              color: const Color(0xFF1A237E),
+              fontSize: 2.2 * SizeConfig.text!,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          IconButton(
+            icon: const Icon(Icons.chevron_right, color: Color(0xFF1A237E)),
+            onPressed: () {},
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildCalendarCard() {
+    return Container(
+      width: double.infinity,
+      decoration: BoxDecoration(
+        color: white,
+        borderRadius: BorderRadius.circular(20),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.05),
+            blurRadius: 10,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(20),
+        child: const HistoryCalender(),
       ),
     );
   }
