@@ -1,4 +1,3 @@
-I'll help you create a README for your Elderly Exercise App project using the provided template and images. Here's the formatted README:
 
 <div align="center">
   <h1>
