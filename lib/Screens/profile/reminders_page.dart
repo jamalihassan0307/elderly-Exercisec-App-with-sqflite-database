@@ -19,9 +19,8 @@ class RemindersPage extends StatefulWidget {
 
   @pragma('vm:entry-point')
   static Future<void> handleSnooze(int id) async {
-    final snoozeTime = tz.TZDateTime.now(tz.local).add(const Duration(seconds: 10));
+    final snoozeTime = tz.TZDateTime.now(tz.local).add(const Duration(minutes: 10));
     await scheduleNotification(id, snoozeTime);
-    print('Snoozed notification $id');
   }
 
   @override
