@@ -8,7 +8,8 @@ import 'package:timezone/timezone.dart' as tz;
 import 'package:ex_app/Screens/profile/reminders_page.dart';
 import 'package:ex_app/Screens/notification/snooze_page.dart';
 
-final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+    FlutterLocalNotificationsPlugin();
 // var database;
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -20,7 +21,7 @@ void main() async {
   const InitializationSettings initializationSettings = InitializationSettings(
     android: initializationSettingsAndroid,
   );
-
+//atif
   await flutterLocalNotificationsPlugin.initialize(
     initializationSettings,
     onDidReceiveNotificationResponse: (NotificationResponse response) async {
@@ -38,7 +39,8 @@ void main() async {
 
   // Handle notification actions
   await flutterLocalNotificationsPlugin
-      .resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>()
+      .resolvePlatformSpecificImplementation<
+          AndroidFlutterLocalNotificationsPlugin>()
       ?.createNotificationChannel(const AndroidNotificationChannel(
         'exercise_reminders',
         'Exercise Reminders',
@@ -70,7 +72,8 @@ void notificationTapBackground(NotificationResponse response) async {
 // Handle snooze action
 Future<void> _handleSnooze(int id) async {
   // Schedule new notification for 10 minutes later
-  final snoozeTime = tz.TZDateTime.now(tz.local).add(const Duration(minutes: 10));
+  final snoozeTime =
+      tz.TZDateTime.now(tz.local).add(const Duration(minutes: 10));
   print(snoozeTime);
   await scheduleNotification(id, snoozeTime);
 }
