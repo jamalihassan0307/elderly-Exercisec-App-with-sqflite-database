@@ -34,8 +34,12 @@ The Elderly Exercise App is a Flutter application designed to help elderly users
 - ✅ **Reminders**: Customizable workout reminders
 - ✅ **Offline Support**: Local data storage using SQLite
 
-## 📸 Screenshots
+## 📸 Banner
 
+
+ <img src="https://github.com/jamalihassan0307/Exercisec-App/blob/main/screenshots/banner.png?raw=true" alt="Banner" />
+
+## 📸 Screenshots     
 ### App Flow
 
 <table border="1">
